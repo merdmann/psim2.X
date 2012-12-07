@@ -1,0 +1,153 @@
+V "GNAT Lib v2011"
+A -mtune=generic
+A -march=x86-64
+P SS ZX
+R nnnvnnnnnvnvvnnnnnvvnvvvnvvnnvnvnnnnnnnvnnnnvnnvnnnvnvnvnnvnnnnvnnvnnnnnnnv1+nnnv1+nn
+
+U vector_processor%b	vector_processor.adb	19821dac OO PF PK
+W ada%s			ada.ads			ada.ali
+W ada.calendar.delays%s	a-caldel.adb		a-caldel.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.finalization.heap_management%s  a-fihema.adb  a-fihema.ali
+W ada.real_time%s	a-reatim.adb		a-reatim.ali
+W ada.synchronous_task_control%s  a-sytaco.adb	a-sytaco.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W system%s		system.ads		system.ali
+W system.parameters%s	s-parame.adb		s-parame.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+W system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+W system.task_info%s	s-tasinf.adb		s-tasinf.ali
+W system.tasking%s	s-taskin.adb		s-taskin.ali
+W system.tasking.protected_objects%s  s-taprob.adb  s-taprob.ali
+W system.tasking.stages%s  s-tassta.adb		s-tassta.ali
+W types%s		types.adb		types.ali
+W unchecked_deallocation%s
+
+U vector_processor%s	vector_processor.ads	14781ea7 EE OO PF PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.finalization%s	a-finali.adb		a-finali.ali
+W ada.finalization.heap_management%s  a-fihema.adb  a-fihema.ali
+W ada.streams%s		a-stream.ads		a-stream.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W system%s		system.ads		system.ali
+W system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+W system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+
+D ada.ads		20110419093133 3ffc8e18
+D a-calend.ads		20110419093130 343c83dd
+D a-caldel.ads		20110419093130 9f20b83d
+D a-except.ads		20110419093131 4759ecee
+D a-finali.ads		20110419093131 b333d305
+D a-fihema.ads		20110419093131 1940728a
+D a-ioexce.ads		20110419093131 8b9de6cd
+D a-reatim.ads		20110419093132 63f07669
+D a-stream.ads		20110419093132 2ca4ee37
+D a-sytaco.ads		20110419093132 a7cf8eb9
+D a-tags.ads		20110419093132 7b33f560
+D a-textio.ads		20110419093132 386df5d4
+D a-unccon.ads		20110419093133 f9eb8f06
+D interfac.ads		20110419093135 f77d8799
+D i-c.ads		20110419093135 5421119b
+D i-cstrea.ads		20110419093135 1bd72c32
+D system.ads		20110419093140 23e1f70b
+D s-atacco.ads		20110419093136 1dc856ad
+D s-crtl.ads		20110419093137 ac77b159
+D s-exctab.ads		20110419093137 66e51330
+D s-ficobl.ads		20110419093137 443b9d66
+D s-finroo.ads		20110419093137 2dd85ce2
+D s-linux.ads		20110419093137 47911ab1
+D s-multip.ads		20110419093137 38ac9f73
+D s-osinte.ads		20110419093137 6e2d2e09
+D s-parame.ads		20110419093138 03aa3b01
+D s-pooglo.ads		20110419093138 542f33d0
+D s-secsta.ads		20110419093138 eea35a36
+D s-soflin.ads		20110419093138 607487c5
+D s-stache.ads		20110419093138 596fc1b4
+D s-stausa.ads		20110419093138 017a0a05
+D s-stalib.ads		20110419093138 f78bcf95
+D s-stoele.ads		20110419093138 facd7d98
+D s-stoele.adb		20110419093138 afc5dc80
+D s-stopoo.ads		20110419093138 5c51faf9
+D s-stratt.ads		20110419093138 aedef97e
+D s-tasinf.ads		20110419093139 21316953
+D s-taspri.ads		20110419093139 af44aca8
+D s-taprop.ads		20110419093139 07f79e46
+D s-taskin.ads		20110419093139 b2eaee08
+D s-taprob.ads		20110419093139 502249e3
+D s-tassta.ads		20110419093139 e88ef99e
+D s-traent.ads		20110419093139 5221ee41
+D s-unstyp.ads		20110419093139 6ae15c76
+D s-wchcon.ads		20110419093139 bfeb2e3d
+D types.ads		20120527195140 bee36f74
+D unchdeal.ads		20110419093141 214516a4
+D vector_processor.ads	20120528192744 a74bcda2
+D vector_processor.adb	20120528192520 becdd2b3
+X 1 ada.ads
+16K9*Ada 19e8 48|1r6 1r52 49|1r6 1r41 3r6 3r41
+X 5 a-finali.ads
+42K13*Finalization 71e21 48|1w10 1r56
+46H9*Controlled 62e72 48|5r37 14r37
+50U14*Adjust<22|44p14>
+X 10 a-sytaco.ads
+40K13*Synchronous_Task_Control 78e33 49|3w10 3r45
+44R9*Suspension_Object 69e14 49|19r16 28r17
+46U14*Set_True 49|82s13 96s16
+48U14*Set_False 49|47s7 49s10 73s10 98s16
+52U14*Suspend_Until_True 49|72s10 106s10
+X 12 a-textio.ads
+49K13*Text_IO 471e16 49|1w10 1r45
+X 46 types.ads
+28K9*Types 40e10 49|5w6 5r41
+31W19*Safe_Counter_Type 38e25 49|29r17
+32U17 Increment 49|75s22
+33U17 Decrement 49|79s22
+X 47 unchdeal.ads
+20u11*Unchecked_Deallocation 49|2w6 32r26
+X 48 vector_processor.ads
+3K9*Vector_Processor 21l5 21e21 49|7b14 111l5 111t21
+5H9*Object_Type<5|46R9> 5|50P14 48|6r30 8p13 8r39 14c9 16e17 18P14 18r40
+. 19P14 19r38 49|38r40 58r38 89r37
+6P9*Handle(5R9) 49|26r17
+8y13*Process_Vector{boolean} 8>29 49|77R27
+8r29 This{5R9}
+11R9 Object_Data_Type 12r42 49|25c9 30e14 32r49 42r19
+12P9 Object_Data_Access(11R9) 15r17 49|12r53 33r49 39r14 90r14
+15p10 Data{12P9} 49|44m12 60r15 61m21 90m46
+18U14 Initialize<5|49p14> 18=26 49|38b14 53l8 53t18
+18r26 This{5R9} 49|38b26 43m20 43r20 44m7
+19U14 Finalize<5|51p14> 19=24 49|58b14 63l8 63t16
+19r24 This{5R9} 49|58b24 60r10 61m16 61r16
+X 49 vector_processor.adb
+10i4 Nbr_Of_Workers{natural} 23r34 29r35 94r22
+12T14 Worker_Task_Type 12d32 12d46 13r42 50r36 68b14 85l8 85t24
+12i32 id{natural} 72r39 73r30
+12p46 Data{48|12P9} 72r30 73r21 75r10 77r43 79r10 82r23
+13P9 Worker_Task_Access(12T14) 20r16
+18R9 TCB_Type 21e14 23r54
+19r7*Ready{10|44R9} 49m33 72m43 73m34 96m38 98m39
+20p7*Worker{13P9} 50m22
+23A9 TCB_Array(18R9)<integer> 27r17
+26p7*Self{48|6P9} 43m12 77r48
+27a7*TCB{23A9} 48r21 49m26 50m15 72m35 73m26 96m31 98m32
+28r7*Done{10|44R9} 47m23 82m28 106m35
+29w7*Active{46|31W19} 75m15 79m15
+32U14 Free[47|20] 61s10
+39p7 Data{48|12P9} 42m7 43m7 43r7 44r20 47r18 48r16 49r21 50m10 50r10 50r56
+48i11 i{integer} 49r30 50r19 50r53
+69i7 Current{natural} 75m33 75r33 79m33 79r33 81r13
+89U14 Execute 89b14 89=23 89>56 109t8
+89c23 This<48|5R9> 90r41
+89i56 times{natural} 105r21
+90p7 Data{48|12P9} 96r26 98r27 106r30
+92U17 Set_Data_Ready 92b17 92>33 101l11 101t25 104s7 107s10
+92b33 Ready{boolean} 95r16
+94i14 i{integer} 96r35 98r36
+105i11 i{integer}
+

@@ -1,0 +1,26 @@
+project Test_Paraffin_Linux is
+
+   for Main use ("test_paraffin.adb");
+   for Source_Dirs use ("parallel/internal", "parallel/iteration/**", "parallel/recursion", "test/**", "parallel", "parallel/config/linux", "util/containers");
+   for Object_Dir use "bin/obj";
+   for Exec_Dir use "bin";
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnatVn", "-gnatf", "-gnatwc.cf.h.ijkm.op.pr.r.stu.u.w.x", "-gnatyaAbBcCefhiIklnoOprStuxm");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-g", "-s", "-j4");
+      for Global_Configuration_Pragmas use "global_pragmas";
+   end Builder;
+
+   package Binder is
+      for Default_Switches ("ada") use ("-r");
+   end Binder;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-Wl,--gc-sections", "-g");
+   end Linker;
+
+end Test_Paraffin_Linux;
+

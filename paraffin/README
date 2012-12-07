@@ -1,0 +1,776 @@
+Paraffin is a set of Ada 2005 generics that may be used to add 
+parallelism to iterative loops and recursive code.
+
+Paraffin also includes a suit of useful parallel utilities that
+utilize the Paraffin generics. These include generics for;
+   1) generic to integrating a function in parallel
+   2) generic to apply quicksort algorithm in parallel to an array
+   3) generic to apply fast fourier transform to an array of data.
+   4) generic Red-Black tree container that performs some operations
+      in parallel.
+   5) function to solve matrices using Gauss-Jordan Elimination
+
+Paraffin is free software.  See the file COPYING for copying permission.
+Most of the source code is released under the GMGPL (GNAT Modified GPL)
+See the individual source files for details.
+
+Any comments on the generics would be greatly appreciated.
+Please send comments to brad.moore@shaw.ca
+
+1.0 INTRODUCTION
+================
+
+For iterative parallelism, three main flavours of parallelism generics 
+exist within paraffin.
+
+   Work-Sharing
+   Work-Seeking
+   Work-Stealing
+
+For recursive parallelism, only Work-Sharing and Work-Seeking forms 
+exist.
+
+For each parallelism approach, there are 3 cases;
+
+   elementary (functional) reduction
+   composite  (procedural) reduction
+   no reduction
+
+The elementary (functional) reducing generics are intended to be used 
+when a final result needs to be generated, and the type of the final 
+result is an elementary type (i.e. Integer, Boolean, Float).
+
+The elementary generics essentially are ones that return the final
+reduction result as a function return value, rather than an in out
+parameter of a procedure.
+
+It is not strictly necessary that the type be an elementary type,
+however, it is likely that for composite types, better performance will
+result from using the composite generics, since function returns involve
+copying the result into a result variable, whereas procedure calls act
+on the parameter directly without having to make a copy.
+
+The composite (procedural) reducing generics are intended to be used 
+when a final result needs to be generated, and the type of the final 
+result is a composite type (i.e. record, tagged type).
+That is not to say that elementary types cannot be used. You may find
+that elementary types perform well with the composite generics as well.
+
+The remaining class of generics do not produce a final result, and 
+therefore do not involve any reduction. These generics are useful when 
+there is only a need to iterate or recurse in parallel.
+
+2.0 BUILD INSTRUCTIONS =========
+
+
+- For the Irvine ICC Ada 2005 compiler on  Windows, execute the 
+  following script;
+
+   icm new
+   icm scan -subdir "*.ad{s,b}"
+   icm scan parallel/config/windows/parallel-config.ads
+   icm make test_paraffin  -compile_flags=\"-predef=(f32,lf64)\"
+   icm make test_integrate -compile_flags=\"-predef=(f32,lf64)\"
+   icm make test_quicksort -compile_flags=\"-predef=(f32,lf64)\"
+   icm make test_fft -compile_flags=\"-predef=(f32,lf64)\"
+
+  You can add other compile flags as well, such as
+      -compile_flags=\"-predef=(f32,lf64) -opt -debug -nochecks\"    
+
+  to turn on optimization, debug, and disable checks.
+ 
+  To compile for Irvine ICC on Linux, execute the following script 
+  instead;
+
+   icm new
+   icm scan -subdir "*.ad{s,b}"
+   icm scan parallel/config/linux/parallel-config.ads
+   icm make test_paraffin  -compile_flags='"-predef=(f32,lf64)"' \
+           -link_flags='"-linker_postflag=(-lpthread)"'
+   icm make test_integrate -compile_flags='"-predef=(f32,lf64)"' \
+           -link_flags='"-linker_postflag=(-lpthread)"'
+   icm make test_quicksort -compile_flags='"-predef=(f32,lf64)"' \
+           -link_flags='"-linker_postflag=(-lpthread)"'
+   icm make test_fft -compile_flags='"-predef=(f32,lf64)"' \
+           -link_flags='"-linker_postflag=(-lpthread)"'
+
+  You can add other compile flags as well, such as;
+
+      -compile_flags='"-predef=(f32,lf64) -opt -debug -nochecks"'    
+
+  to turn on optimization, debug, and disable checks.
+
+- For GNAT Pro, GNAT GPL or GNAT AUX, load the appropriate .gpr file 
+  into the GPS ide, and build the executable from within the ide, or 
+  alternatively use gnatmake to perform the equivalent actions described
+  in the .gpr file.
+
+3.0 TESTED PLATFORMS =========
+
+Paraffin has been ported to the following compilers and platforms.
+
+   GNAT GPL 2010-2011  (Windows, Linux)
+   Irvine Ada 2005     (Windows, Linux)
+   GNAT AUX FSF 4.6.1  (Android)
+
+Paraffin is intended to be portable to any platform that supports 
+Ada 2005 compilation, and in theory, any Ada 2005 compiler should be
+able to compile the code since there are no dependencies on the GNAT 
+run-time.
+
+It should also be possible to compile the generics for any target
+system, since the generics do not rely on any OS-specific support. The 
+Windows and Linux builds do provide extra capabilities that allows the 
+client to specify that each worker is locked to execute on a specific 
+processor (Processor Affinity).
+
+Setting the affinity of a task is an OS-Specific feature, but the 
+generics can be configured to disable this feature. (By setting 
+Parallel.Config.Target to "Any"). When configured this way, the client 
+should not specify Use_Affinity => True, when calling the generics as
+that will result in a Program_Error exception being raised. Specifying 
+Use_Affinity => False however, should execute correctly.
+
+Note that in general it is usually best to specify Use_Affinity as False
+(which is the default), since specifying true rarely makes a noticeable
+difference in the performance, and in some cases can actually degrade 
+performance, since the OS scheduler typically does a good job of 
+splitting the worker task threads to separate processors, and allows
+workers to migrate to other processors as needed.
+
+
+4.0 DOWNLOADING ============== 
+
+The latest stable release and older releases may be downloaded from;
+
+ https://sourceforge.net/projects/paraffin/files/
+
+For those who want the current development versions of the source they
+can download using git (http://git-scm.com/) by issuing the following
+commands;
+
+ mkdir sandbox 
+ cd sandbox
+ git clone git://paraffin.git.sourceforge.net/gitroot/paraffin/paraffin
+
+The current development version typically will correspond to the latest
+stable release, but may at times be unstable when new features are being
+worked on. 
+
+5.0 PARALLELISM STRATEGIES
+==========================
+
+Work-Sharing is a simpler divide and conquer strategy where an attempt
+is made to divide the work evenly among the worker at the start of the
+parallelism.
+
+Work-Seeking is an approach where workers can seek more work when they
+complete their tasks. The hand-off of work from the seeker and the donor
+is cooperative. A seeking-work flag is monitored by the client. If the
+flag is set, it indicates other workers are seeking work, and the busy
+worker donates work to the seeker.
+
+Work-Stealing is an approach where workers can steal work from other
+workers when they complete their tasks. The strategy is to have the idle
+workers steal work from busy workers with minimum interference. The idle
+worker searches randomly to find  a busy worker. When a candidate is
+found, the stealer modifies the candidates loop bounds to force the 
+candidate to exit early. The stealer takes work from the candidate, then
+restarts the candidate to continue from where it left off.
+
+Work-Sharing generally makes sense when the amount of work can be
+divided evenly between the workers.
+
+Work-Seeking and Work-Stealing are usually good choices then the amount
+of work can not be divided evenly. In many cases, these forms can also
+outperform Work-Sharing, since one can never expect that the  workers
+for evenly distributed loads will finish at precisely the same time,
+especially considering the load introduced by other processes or threads
+on the system.
+
+Work-Stealing and Work-Seeking are generally pretty comparable.
+It seems that for most of the tests, there will be a slight edge to
+Work-Seeking, though this is not always the case.
+
+
+6.0  LOOP  CONSTRUCTS
+=====================
+
+For iterative parallelism, work sharing, work seeking, and work
+stealing may be applied to for loops and while loops.
+
+7.0 RECURSIVE CONSTRUCTS
+========================
+
+For recursive parallelism, work stealing forms do not yet exist.
+However, in addition to regular work-seeking and 
+work-sharing, there also exists stack-limited and stack-safe work 
+seeking forms. These generics are used to avoid stack overflow.
+If recursion gets too deep on the stack, the generics save the 
+subordinate work and come back later to process the missing recursion 
+after the stack has been cleared to a fresh start.
+
+8.0 EXAMPLES
+============
+
+ A) Iterative Work Sharing example: Computing a sum of integers
+ --------------------------------------------------------------
+
+   --  Note the instantiation can be a library level instantiation
+   --  separate from the use of the instantiation, and reused for
+   --  multiple for loops.
+   with Parallel.Iteration.Work_Sharing_Functional_Reduction;
+
+   procedure Integer_Addition_Reducer is new
+     Parallel.Iteration.Work_Sharing_Functional_Reduction
+       (Iteration_Index_Type => Positive,
+        Element_Type => Integer,
+        Reducer => "+",
+        Identity_Value => 0);
+		
+   -------------------------------------------------------
+   
+   --  Sum : Integer := 0;
+   --  for I in 1 .. 100_000_000 loop
+   --    Sum := Sum + I;
+   --  end loop
+   declare
+      procedure Iteration (Start, Finish : Positive; 
+                           Result : in out Integer) is
+      begin
+         for I in Start .. Finish loop
+            Result := Result + I;
+         end loop;
+      end Iteration;
+      Sum : Integer := 0;
+   begin
+      Integer_Addition_Reducer
+        (From    => 1,
+         To      => 100_000_000,
+         Process => Iteration'Access,
+         Item    => Sum);
+   end;
+
+ B) Iterative Work Seeking Example: Computing a sum of integers
+ --------------------------------------------------------------
+
+   --  Note the instantiation can be a library level instantiation
+   --  separate from the use of the instantiation, and reused for
+   --  multiple for loops.
+   with Parallel.Iteration.Work_Seeking_Functional_Reduction;
+
+   procedure Work_Seeking_Integer_Addition_Reducer is new
+     Parallel.Iteration.Work_Seeking_Functional_Reduction
+       (Iteration_Index_Type => Integer,
+        Element_Type => Integer,
+        Reducer => "+",
+        Identity_Value => 0);
+
+   -------------------------------------------------------
+   
+   --  Sum : Integer := 0;
+   --  for I in 1 .. 100_000_000 loop
+   --    Sum := Sum + I;
+   --  end loop
+   declare
+
+      procedure Iteration
+        (Start, Finish : Integer;
+         Result    : in out Integer) is
+      begin
+         for I in Start .. Finish loop
+            Result := Result + I;
+         end loop;
+      end Iteration;
+	  
+	  Sum : Integer := 0;
+   begin
+      Work_Seeking_Integer_Addition_Reducer
+        (From          => 1,
+         To            => 100_000_000,
+         Process       => Iteration'Access,
+         Item          => Sum);
+   end;
+
+ C) Iterative Work Stealing Example: Computing a sum of integers
+ ---------------------------------------------------------------
+
+   --  Note the instantiation can be a library level instantiation
+   --  separate from the use of the instantiation, and reused for
+   --  multiple for loops.
+
+   with Parallel.Iteration.Work_Stealing_Functional_Reduction;
+
+      procedure Work_Stealing_Integer_Addition_Reducer is new
+        Parallel.Iteration.Work_Stealing_Functional_Reduction
+          (Iteration_Index_Type => Integer,
+           Element_Type => Integer,
+           Reducer => "+",
+           Identity_Value => 0);
+
+   -------------------------------------------------------
+   
+   --  Sum : Integer := 0;
+   --  for I in 1 .. 100_000_000 loop
+   --    Sum := Sum + I;
+   --  end loop
+
+   declare
+
+      Sum : Integer := 0;
+
+      procedure Iteration
+        (Start, Finish : Integer;
+         Result : in out Integer) is
+      begin
+         for I in Start .. Finish loop
+            Result := Result + I;
+         end loop;
+      end Iteration;
+
+   begin
+      Work_Stealing_Integer_Addition_Reducer
+        (From        => 1,
+         To          => 100_000_000,
+         Process     => Iteration'Access,
+         Item        => Sum);
+   end;
+
+ D) Recursive Work Sharing Fibonacci
+ -----------------------------------
+ 
+   --  function Fibonacci (Number : Natural) return Natural is
+   --  begin
+   --     if Number < 2 then
+   --        return Number;
+   --     else
+   --        return Fibonacci (Number - 2) + Fibonacci (Number - 1);
+   --     end if;
+   --  end Fibonacci;
+
+   with Parallel.Recursion.Work_Sharing_Functional_Reduction;
+   use Parallel;
+
+   function Fibonacci (Value : Natural) return Natural
+   is
+      package Fibonacci_Recursion is new
+        Parallel.Recursion.Work_Sharing_Functional_Reduction
+          (Work_Type => Natural,
+           Result_Type => Natural,
+           Reducer => "+",
+           Identity_Value => 0);
+
+      Dispatcher : aliased 
+        Fibonacci_Recursion.Recursion_Dispatcher_Access := null;
+
+      function Parallel_Fibonacci 
+           (Number : Natural;
+            Subcontractors : Worker_Count_Type) return Natural is
+      begin
+
+         if Number < 2 then
+            return Number;
+         else
+            return
+              Dispatcher.Recurse
+                (Item => Number - 1,
+                 Direction  => Recursion.Left,
+                 Split => 1,
+                 Of_Splits => 2) +
+              Dispatcher.Recurse
+                (Item => Number - 2,
+                 Direction => Recursion.Right,
+                 Split => 2,
+                 Of_Splits => 2);
+         end if;
+
+      end Parallel_Fibonacci;
+
+      function Sequential_Fibonacci (Number : Natural) return Natural is
+      begin
+
+         if Number < 2 then
+            return Number;
+         else
+            return
+              Sequential_Fibonacci (Number - 2) +
+              Sequential_Fibonacci (Number - 1);
+         end if;
+
+      end Sequential_Fibonacci;
+
+   begin
+      return Fibonacci_Recursion.Execute
+        (Item  => Value,
+         Dispatcher => Duspatcher'Access,
+         Parallel_Process => Parallel_Fibonacci'Access,
+         Process => Sequential_Fibonacci'Access);
+   end Fibonacci;
+
+   
+ E) Recursive Work Seeking Fibonacci
+ -----------------------------------
+ 
+   with Parallel.Recursion.Work_Seeking_Functional_Reduction;
+   use Parallel;
+
+   --  function Fibonacci (Number : Natural) return Natural is
+   --  begin
+   --     if Number < 2 then
+   --        return Number;
+   --     else
+   --        return Fibonacci (Number - 2) + Fibonacci (Number - 1);
+   --     end if;
+   --  end Fibonacci;
+
+   function Fibonacci (Value : Natural) return Natural
+   is
+      Other_Workers : aliased Parallel.Work_Seeking_State;
+
+      package Fibonacci_Recursion is new
+        Parallel.Recursion.Work_Seeking_Functional_Reduction
+          (Work_Type => Natural,
+           Result_Type => Natural,
+           Reducer => "+",
+           Identity_Value => 0);
+
+      Dispatcher : aliased 
+         Fibonacci_Recursion.Recursion_Dispatcher_Access := null;
+
+      Minimum_Work_Offer : constant := 20;
+	  
+      function Parallel_Fibonacci (Number : Natural) return Natural is
+      begin
+
+         if Number < 2 then
+            return Number;
+         elsif Other_Workers.Seeking_Work and then
+           Number > Minimum_Work_Offer then
+
+            return
+              Dispatcher.Recurse
+                (Item => Number - 2) +
+              Parallel_Fibonacci (Number - 1);
+         else
+            return
+              Parallel_Fibonacci (Number - 2) +
+              Parallel_Fibonacci (Number - 1);
+         end if;
+
+      end Parallel_Fibonacci;
+
+   begin
+      return Fibonacci_Recursion.Execute
+        (Item  => Value,
+         Other_Workers => Other_Workers'Access,
+         Dispatcher => Dispatcher'Access,
+         Process => Parallel_Fibonacci'Access);
+   end Fibonacci;
+
+ F) Recursive Stack Safe Work Seeking Fibonacci
+ ----------------------------------------------
+
+   with Parallel.Recursion.Stack_Safe_Work_Seeking_Functional_Reduction;
+   use Parallel;
+
+   with System;
+
+   --  function Fibonacci (Number : Natural) return Natural is
+   --  begin
+   --     if Number < 2 then
+   --        return Number;
+   --     else
+   --        return Fibonacci (Number - 2) + Fibonacci (Number - 1);
+   --     end if;
+   --  end Fibonacci;
+
+   function Fibonacci
+     (Value : Natural;
+      Stack_Deferrals : access Parallel.Recursion.Stack_Limit_Count)
+      return Natural
+   is
+      Other_Workers : aliased Parallel.Work_Seeking_State;
+
+      package Fibonacci_Recursion is new
+        Parallel.Recursion.Stack_Safe_Work_Seeking_Functional_Reduction
+          (Work_Type => Natural,
+           Result_Type => Natural,
+           Reducer => "+",
+           Identity_Value => 0);
+
+      Dispatcher : aliased 
+         Fibonacci_Recursion.Recursion_Dispatcher_Access := null;
+
+      function Parallel_Fibonacci
+        (Number : Natural;
+         Stack_Limit : System.Address) return Natural
+      is
+         use type System.Address;
+		 Minimum_Work_Offer : constant := 20;
+      begin
+
+         if Number < 2 then
+            return Number;
+         elsif Other_Workers.Seeking_Work and then
+            Number > Minimum_Work_Offer then
+
+			--  Idle worker seeking work, make an offer
+            return
+              Dispatcher.Recurse
+                (Item => Number - 1,
+                 Stack_Limit => Stack_Limit)
+              +
+              Parallel_Fibonacci (Number - 2, Stack_Limit);
+
+         elsif Number'Address <= Stack_Limit then
+            --  Running out of stack, defer work
+            return
+              Dispatcher.Recurse
+                (Number => Number - 1,
+                 Stack_Limit => Stack_Limit)
+              +
+              Dispatcher.Recurse
+                (Number => Number - 2,
+                 Stack_Limit => Stack_Limit);
+
+         else  --  Sequential
+            return
+              Parallel_Fibonacci (Number - 2, Stack_Limit) +
+              Parallel_Fibonacci (Number - 1, Stack_Limit);
+         end if;
+
+      end Parallel_Fibonacci;
+
+   begin
+      return Recursive_Fibonacci.Execute
+        (Item  => Value,
+         Other_Workers => Other_Workers'Access,
+         Dispatcher => Dispatcher'Access,
+         Process => Parallel_Fibonacci'Access,
+         Max_Depth => Parallel_Test_Harness.Maximum_Recursive_Stack_Depth,
+         Storage_Size => Parallel_Test_Harness.Worker_Storage_Size,
+         Stack_Deferrals => Stack_Deferrals);
+   end Fibonacci;
+
+ 
+9.0 TEST EXECUTABLES
+====================
+
+Paraffin provides the following test executables
+
+  1) test_paraffin   -  performs a battery of tests
+  2) test_integrate  -  executes a test that recursively determines
+                        the area under the curve in parallel for the 
+                        square root function between a user specified 
+                        range.
+  3) test_quicksort  -  executes a test of a parallel quicksort.
+                        This is a conquer and divide strategy, as 
+                        opposed to a divide and conquer strategy.
+  4) test_fft        -  executes a test of a parallel fast fourier
+                        transform (and inverse). The implementation is
+                        a recursive approach based on the Cooley-Tukey
+                        algorithm, and the Danielson-Lanczos lemma.
+                        This test is unique in that it features both
+                        the recursive generics and the iterative 
+                        generics, plus it uses Paraffin's barrier
+                        utility to interleave sequential and parallel
+                        code.
+  5) test_matrix     -  executes a function to solve a matrix of
+                        float numbers using Gauss-Jordan Elimination.
+                        This test is also utilizes Paraffin's barrier
+                        utility to interleave sequential and parallel
+                        code. This test utilizes Annex G, Numerics
+                        capabilities, and has only been built for Linux,
+                        as it requires extra libraries to be installed
+                        on the target. (BLAS, LAPACK)
+
+------------------
+9.1 test_paraffin
+------------------
+
+The test_paraffin executable exercises all of the generics.
+
+This executable accepts three command line parameters. The first is a 
+loop index (typically best to use a value between 0 and 400_000_000.)
+
+The second parameter is used for testing recursive fibonacci code, and
+indicates the fibonacci number to calculate.
+It is best to specify a number between 1 and 40.
+
+The third parameter is a boolean parameter (either "True" or "False"), 
+and indicates whether or not the container tests should be executed.
+
+These tests do not show work-stealing in a favorable light, which is due
+to the  high number of iterations relative to work performed.
+
+A test_bernoulli executable does exist however that calculates Bernoulli
+numbers, and is an example where work-stealing can perform much better
+than work-sharing or work-stealing.
+
+Various parameters of the generics can be controlled by environment
+variables defined in the package Parallel_Test_Harness in the test 
+folder.
+
+In particular;
+
+DEFAULT_WORKER_COUNT (Number) defines the number of workers to use.
+
+USE_AFFINITY (Boolean) has effect only on Linux or Windows and indicates 
+  whether or not workers should be locked to a specific processor.
+
+WORKER_STORAGE_SIZE   size of the stack for workers
+
+MIN_STEAL	the minimum number of iterations that can be stolen 
+                using work-stealing ie.  A value of zero (default)
+                means the generic will attempt to automatically assign 
+                an appropriate value based on the number of workers and
+                iterations.
+
+MIN_SEEK	This is esstentially the same as MIN_STEAL, except that
+                it applies to the work-seeking generics, instead of the
+                work-stealing generics. It represents the minimum number 
+                of iterations that can be "seeked".
+
+WORK_BUDGET     the number of times a worker may seek or steal more 
+                work. A negative number (the default) is an unlimited 
+                work budget.
+
+MAX_STACK_DEPTH  For the stack safe work-seeking recursion, defines the 
+                percentage or amount of stack space allowed to be 
+                occupied by the worker before deferring the subordinate
+                work to later so, in order to prevent stack overflow 
+                from occurring
+
+MAX_STACK_LIMIT  For the stack limited work-seeking recursion, defines 
+                the number of times a routine can recurse before 
+                deferring the subordinate work to later so, in order to 
+                prevent stack overflow from occurring.
+
+PARALLEL_DEBUG_ENABLED Causes Debug messages to be displayed on the 
+               console if the configuration pragma Debug_Policy (CHECK)
+               is specified.
+
+Note: the Debug_Policy pragma is a GNAT pragma. Other compilers should 
+ignore this pragma, which means that the debug logging cannot be enabled 
+for those platforms.
+
+The paraffin package also includes a generic red-black tree, which 
+mostly has been used to test the recursive generics, but is designed to 
+be usable as a general purpose container.
+
+There are a few methods that have not yet been implemented, such as 
+delete, and contains.
+
+------------------
+9.2 test_integrate
+------------------
+
+The test_integrate executable integrates the square root function
+over a user specified range.
+
+Usage:
+
+test_integrate lower_bound upper_bound
+   where:
+       bounds are floating point values and lower < upper
+
+Environment Variables:
+
+  DEFAULT_WORKER_COUNT ; Number of workers to use for each test
+  MAX_STACK_DEPTH : No. of recursive calls before stack limited
+    deferrals occur
+  WORKER_STORAGE_SIZE : Stack size for workers
+  PARALLEL_DEBUG_ENABLED : If compiled with pragma debug enabled, logs 
+    debug info to console
+
+Suggested inputs: 
+     test_integrate 1.0000 1.00001
+
+NOTE: Larger ranges of values can take significantly
+         longer to run. If the program appears to be
+         hung, it likely is that the range specified is
+         too large, and is taking too long to complete.
+
+------------------
+9.3 test_quicksort
+------------------
+
+The test_quicksort executable sorts an array of data.
+
+Usage:
+
+   test_quicksort <number_of_elements>    {verbose=FALSE {reset=TRUE {run_sequential=FALSE}}}
+      where 'verbose' is TRUE to indicate verbose, FALSE otherwise
+      where 'reset' is true if random numbers generator is reset
+      where 'run_seq' is true if sequential test is to be run
+
+Environment Variables:
+
+  DEFAULT_WORKER_COUNT ; Number of workers to use for each test
+  USE_AFFINITY : Lock each worker to a specific physical processor
+  WORK_BUDGET_FOR_EVEN_LOADS : No. of times work seeker may seek work, 
+    for evenly balanced loads -1 means unlimited 
+  MAX_STACK_LIMIT : Percentage of stack before stack safe work deferrals
+    occur
+  WORKER_STORAGE_SIZE : Stack size for workers
+  PARALLEL_DEBUG_ENABLED : If compiled with pragma debug enabled, logs 
+    debug info to console
+
+Suggested inputs: 
+     test_quicksort 1_000_000
+
+------------
+9.4 test_fft
+------------
+
+The test_fft computes the fast fourier transform of a sine wave
+for an array of data sized to be a user specified power of two.
+
+Usage:
+
+   test_fft <P> {verbose=FALSE {run_sequential=FALSE}}
+      where 2**P data elements will be used
+      where 'scale' is TRUE to indicate results are scaled, 
+        by the size of the array, FALSE otherwise
+      where 'run_seq' is true if sequential test is to be run
+
+Environment Variables:
+
+  DEFAULT_WORKER_COUNT ; Number of workers to use for each test
+  USE_AFFINITY : Lock each worker to a specific physical processor
+  WORK_BUDGET_FOR_EVEN_LOADS : No. of times work seeker may seek work,
+    for evenly balanced loads -1 means unlimited 
+  MAX_STACK_LIMIT : Percentage of stack before stack safe work deferrals
+    occur
+  WORKER_STORAGE_SIZE : Stack size for workers
+  PARALLEL_DEBUG_ENABLED : If compiled with pragma debug enabled, logs
+    debug info to console
+
+Suggested inputs: 
+     test_fft 20
+
+----------------
+9.5 test_matrix
+---------------
+
+The test_matrix can solve a matrix of linear equations using
+Gauss-Jordan Elimination.
+
+Usage:
+
+   test_matrix {-v} {-p} <N>
+      where -v indicates verbose mode 
+      where -p indicates parallel tests only
+      where an N x N matrix will be used
+          (default Value of N is 500)
+
+Environment Variables:
+
+  DEFAULT_WORKER_COUNT ; Number of workers to use for each test
+  PARALLEL_DEBUG_ENABLED : If compiled with pragma debug enabled, 
+                           logs debug info to console
+
+Suggested inputs: 
+     test_matrix 500
+
+Brad Moore

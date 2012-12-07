@@ -1,0 +1,42 @@
+project Threads is
+
+  Arch := external ("ARCH");
+  Impl := "sync-" & Arch & ".adb";
+  Obj := "obj-" & Arch;
+
+  type Build_Type is ("production", "test");
+  type Option_Type is ( "simple", "optimized" );
+
+  Build : Build_Type := external ("BUILD", "production");
+  Opt   : Option_Type := external ("OPT", "simple");
+
+  for Main use (external ("MAIN"));
+  for Source_Dirs use (".", "../common", "../psim/machdep" );
+  for Object_Dir use Obj;
+  for Exec_Dir use external ("BINDIR");
+
+  package Compiler is
+
+    case Build is
+
+      when "production" =>
+        for Default_Switches ("ada") use ("-g", "-gnat05", "-gnato", "-gnatwa", "-gnatQ");
+
+      when "test" =>
+        for Default_Switches ("ada") use ("-g", "-gnat05", "-gnato", "-gnatwa", "-gnatQ", "-gnata");
+    end case;
+  end Compiler;
+
+  package Builder is
+    for Default_Switches ("ada") use ("-g");
+  end Builder;
+
+  package Ide is
+    for Compiler_Command ("ada") use "gnatmake";
+    for Compiler_Command ("c") use "gcc";
+  end Ide;
+
+  package Naming is
+    for Body ("My_Vector") use "my_vector_" & Opt & ".adb";
+  end Naming;
+end Threads;

@@ -1,0 +1,55 @@
+project Threads is
+
+   Arch := external ("ARCH");
+   RunDir := external( "RUNDIR" );
+
+   Impl := "sync-" & Arch & ".adb";
+   Obj := RunDir & "/obj-" & Arch;
+
+  type Build_Type is ("production", "test");
+
+  type Counter_Type is ( "lockops", "protected", "cas" );
+  type Sync_Type is ( "barrier", "suspension", "busy", "semaphores" );
+  type Algorithm_Type is ( "scattered", "twostage", "partitioned", "null" );
+
+  Build     : Build_Type     := external ("BUILD", "production");
+
+  Counter   : Counter_Type   := external ("COUNTER", "lockops" );
+  Sync      : Sync_Type      := external ("SYNC", "semaphore");
+  Algorithm : Algorithm_Type := external ("ALGORITHM", "scattered");
+
+  for Main use (external ("MAIN"));
+  for Source_Dirs use (".", "../common", "./src", "./machdep" );
+  for Object_Dir use Obj;
+  for Exec_Dir use external ("BINDIR");
+
+  package Compiler is
+
+    case Build is
+      when "production" =>
+        for Default_Switches ("ada") use ("-g", "-gnat05", "-gnato", "-gnatwa", "-gnatQ");
+
+      when "test" =>
+        for Default_Switches ("ada") use ("-g", "-gnat05", "-gnato", "-gnatwa", "-gnatQ", "-gnata");
+    end case;
+  end Compiler;
+
+  package Naming is
+    for Body ("Sync") use Impl;
+    for Spec ("Safe_Counter") use "safe_counter_" & Counter & ".ads";
+    for Body ("Safe_Counter") use "safe_counter_" & Counter & ".adb";
+
+    for Body ("My_Sync") use "my_sync_" & Sync & ".adb";
+    for Body ("My_Vector") use "my_vector_" & Algorithm & ".adb";
+  end Naming;
+
+  package Builder is
+    for Default_Switches ("ada") use ("-g");
+  end Builder;
+
+  package Ide is
+    for Compiler_Command ("ada") use "gnatmake";
+    for Compiler_Command ("c") use "gcc";
+  end Ide;
+
+end Threads;

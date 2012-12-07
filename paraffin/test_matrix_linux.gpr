@@ -1,0 +1,26 @@
+project Test_Matrix_Linux is
+
+   for Main use ("test_matrix.adb");
+   for Source_Dirs use (".", "parallel", "parallel/config/linux", "parallel/recursion", "test", "parallel/internal", "parallel/barriers", "parallel/iteration", "util/matrix");
+   for Object_Dir use "bin/obj";
+   for Exec_Dir use "bin";
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnatVa", "-gnatf", "-gnatwc.cf.h.ijkm.op.pr.r.stu.u.w.x", "-gnatyaAbBcCefhiIklnoOprStuxm", "-fstack-check");
+   end Compiler;
+
+   package Builder is
+      for Global_Configuration_Pragmas use "global_pragmas";
+      for Default_Switches ("ada") use ("-g", "-s", "-j4");
+   end Builder;
+
+   package Binder is
+      for Default_Switches ("ada") use ("-r", "-E");
+   end Binder;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-Wl,--gc-sections", "-g");
+   end Linker;
+
+end Test_Matrix_Linux;
+

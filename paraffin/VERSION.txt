@@ -1,0 +1,326 @@
+Paraffin Version History.
+
+Paraffin-3.2  - Current Version
+- The same technique that was applied to iterative work stealing that
+  significanly improved performance, was also applied to the work
+  seeking generics, which also resulted in performance gains.
+- Another benefit of this change is that the work seeking mechanisms
+  are now more hidden inside the generic, and not exposed to client code.
+  As a result, the modifications needed to parallelize a sequential 
+  loop is the same for work-sharing, work-seeking, and work-stealing.
+  It mostly just involves wrapping the loop in a nested procedure, 
+  and then passing the start and finish indexes of the loop as parameters
+  to the nested procedure.
+- A Minimum_Seek parameter replaces the Other_Workers parameter. This
+  parameter indicates the minimum number of iterations that can be
+  "seeked" at one time by an idle worker. This parameter can be left
+  unspecified, in which case, a reasonable default will automatically
+  be assigned.
+- As a result of these changes, the Work-seeking iterative tests 
+  generally seem to out perform work-stealing, although the differences
+  are much closer now. There are still tests where work-sharing can
+  be best choice, and other tests where work-stealing can come out ahead.
+
+Paraffin-3.1
+- Major improvements to Iterative Work Stealing.
+  a) Can now use for loops, (like work sharing and work seeking)
+  b) Client supplied subprogram profile simpler where Start and Finish
+     are "in" parameters in terms of a client supplied 
+     Iteration_Index_Type
+  c) Performance is much improved. The number of iterations does not
+     affect performance, and now all tests are comparable (often
+     better) than work sharing and work-seeking.
+  d) Minimum_Steal input is used to control how fine-grained the 
+     work stealing, as before. The default value automatically chooses
+     a value that should give good performance, if the client does not
+     wish to provide that input.
+
+Paraffin-3.0
+-  This is considered to be a major revision, because many of the units 
+   were renamed, and the interface to the recursive generics has been
+   changed slightly.
+   a) Units that previously were work sharing were implictly work
+      sharing. Now work_sharing appears in the file name to make this
+      more obvious.
+   b) Units that previously had "composite" in the name, now have
+      "procedural" in the name, which better describes that the generics
+      use procedures, rather than functions.
+   c) Units that previously had "elementary" in the name, now have
+      "functional" in the name, which better describes that the generics
+      use functions, rather than procedures.
+   d) The recursive generics are now packages instead of procedures.
+- A non-portable feature of the code which used the GNAT attribute,
+  'Unrestricted_Access, now uses the portable attribute 
+  'Unchecked_Access in the recursive generics. Paraffin should now
+  be fully portable to all Ada 2005 compilers.
+- For the recursive generics, you no longer need to supply an access
+  to subprogram type when instantiating the generic. Instead, you use
+  an access to class-wide type that is provided by the package, and
+  instead of calling a Recurse subprogram that calls into the generic,
+  you make a dispatching call through the tagged type.
+- All the units have the Preelaborate pragma.
+- Units were modified to allow them to be preelaborated.
+- The FFT test program has the Preelaborate pragma, and all trigonomic
+  function calculations are performed at compile time, and an array
+  of these constants is provided at compile time.
+- All the recursive generics now do the final reduction using the
+  reducing linked list facility. This means that the final reductions
+  occur in parallel, rather than sequentially. Likely this wont be
+  noticeable in performance, unless the amount of processing for a 
+  reduction is significant.
+
+Paraffin-2.4
+-  Added a reusable utility to solve a matrix of linear equations using
+   Gauss-Jordan Elimination.
+-  Added test_matrix test driver for parallel/sequential matrix solvers
+-  Red-Black Tree containers fully implemented now. 
+     (Delete, and Contains calls work)
+-  Split Red-Black Tree container into separate generics
+   - Sequential
+   - Work sharing
+   - Work Seeking
+   - Stack Safe Work Seeking
+-  The Red Black Tree generic was previously intended mostly as a
+   test driver for Paraffin Recursive generics. Now the generic has
+   been completed to a state where it can be reused on its own as
+   as generic container.
+-  Changed use of Unchecked_Conversion for Recurse supprogram access
+   to use 'Unrestricted_Access instead. This cleaned the code up
+   considerably in this area. One issue to look into, is that
+   'Unrestricted_Access is a non-standard attribute. It is supported
+   by both GNAT and the ICC compiler however. It may not be supported
+   by other Ada 2005 compilers. Unfortunately, Unchecked_Conversion in
+   this case is not portable either, and may not even continue to work
+   with the existing compilers, so it was thought that using 
+   'Unrestricted_Access was the best option for now. Will investigate
+   to see if there is a possibility for a better solution, or providing
+   a portable mechanism in a future version of Ada.
+
+Paraffin-2.3  - Current Version 
+    (Major Speed improvements for Fast Fourier Transforms)
+
+- Added an Optimized Sequential generic Version for the Fast Fourier  
+  Transform
+- Added new recursive work seeking parallelism generics that
+  work with barriers, as needed to get work seeking Fast Fourier 
+  Transforms working.
+-  Added a special work-seeking FFT version that works with barriers
+   and utilizes the new Paraffin generics.
+   NOTE: The performance of this generic currently is not quite as
+   good as the work-sharing version. Suggest that the Work-Sharing
+   Fast Fourier Transforms be used for those interested.
+- Changed Fast Fourier Transform examples to use long float, instead of
+  float
+- Optimized the Work_Sharing version of the Fast Fourier Transform
+- Provided a function to check the validity of the fast fourier
+  transform results. Implement as a postcondition check, though
+  the postcondition check had to be commented out, since large
+  arrays would cause the 'old check to generate a storage error.
+
+Optimizations include:
+
+  a) Lower level recursion replaced by custom version for N=2, N=4
+  b) Lower level recursion calls lower level generic instantiations of
+     recursive procedure. (Unrolling of recursive calls)
+  c) Trigonomic functions calculated at compile time, instead of run
+     time for lower level recursive calls.
+  d) Number of lower level recursive calls can be tuned/modified as a
+     constant in the spec of the FFT packages.
+
+
+Paraffin-2.2  - (New test executable)
+-  Added new test executable test_fft, which tests a parallel
+   Fast Fourier Transform generic that uses both recursive and iterative
+   paraffin generics to implement the Cooley-Tukey / Danielson-Lanczos
+   algorithm. This test also is unique in that it utilizes and tests
+   the paraffin barrier utility.
+-  The test_quicksort executable allocates the initial array from
+   the heap, rather than declare on the stack, to allow testing of
+   larger array sizes.
+-  The paraffin synchronized_barrier generic uses an "or else" instead
+   of an "else" on its entry guard for improvided performance.
+-  The Binary tree container is no longer a child package of Parallel,
+   it was moved to the util folder as a separate application of Paraffin
+-  Reorganized folders to emphasize useful reusable generics appear
+   in the util folder. This includes;
+     1) function integration generic
+     2) quicksort generic
+     3) fast fourier transform generic
+     4) Red Black binary tree container
+-  Usage message for test executables cleaned up
+-  Added documentation in the README for the following test executables
+     1) test_integrate
+     2) test_quicksort
+     3) test_fft
+
+Paraffin-2.1  - Current Version (Major improvements to non-reducing 
+                                 recursive generics)
+-  Major changes to the non-reducing recursive work-seeking generics.
+   They were simplified, moving away from the work-sharing code base
+-  Quick-sort recursive examples added to test suite. Quicksort is 
+   interesting as a recursive example that is a conquer and divide
+   algorithm, rather than a divide and conquor algorithm. Its also quite
+   different from the other recursive examples, (tree, integration, and
+   fibonacci)
+
+Paraffin-2.0a (Minor Documentation fix release)
+-  Added instantiations of generics to examples in README
+-  Added recursive examples to README
+-  Corrected README Linux build instructions for the Irvine ICC compiler
+-  Removed dead comments
+-  Turned on some additional warning flags, and addressed warnings.
+-  Not calling this a minor release, since there were no changes to
+   actual code, other than comments, and some warnings addressed.
+
+Paraffin-2.0  - (Minor Bugfix release)
+-  Removed extraneous text from one of the print output lines.
+-  Added suggested input values to usage text for test_paraffin
+-  Added suggested input values to usage text for test_integrate
+-  Updated the README to include some simple build instructions for
+   the ICC compiler, and GNAT
+-  Note not really a major revision, but Paraffin-1.10 should have been,
+   so decided to make that move now, since all known bugs are addressed,
+   and further work should signify new development and/or enhancements.
+
+Paraffin-1.12
+-  Incorrect test code loop logic for "Work Seeking Parallel Elementary
+   Integer Linked List Sum" test was giving incorrect results
+-  Incorrect test code loop logic for "Work Stealing Parallel Elementary
+   Integer Linked List Sum" test was giving incorrect results
+-  "Elapsed" was getting printed twice on the same line for one of the tests.
+
+Paraffin-1.11 - (Minor Bugfix release)
+- The Recursive Composite Work-Seeking Reducing Recurse Generic 
+  did not initialize its Result, leading to garbage values for result
+- Improved performance of Double Fibonacci test, by only calling parallel 
+  Recurse once when Other_Workers.Seeking_Work, instead of twice
+- Fixed cut and paste error for title of last set of Fibonacci tests
+  which were described as Red-Black Tree tests.
+- Removed coding standard references from project files
+- For test_paraffin_all_targets project file, changed directory
+  separators to work for both Windows and Linux
+- Created project file for test_integrate_all_targets
+- Fixed some compiler warnings
+
+Paraffin-1.10  (*Major Update*)
+- Runs on Android OS. Dual core Samsung Galaxy S II
+- Compiles under the Irvine Ada 2005 Compiler, Windows Linux
+- Compiles under GNAT AUX FSF 4.6.1, Android
+- Compiles under GNAT GPL 2010-2011, 
+- Major speed improvements for parallel recursion
+- Added Stack Depth filtering for work offers
+- Added Wait_For_Deferred entry.
+- Only one offer made per recursive call
+- Renamed generic parameter from "process" to "sequential_process"
+- Simplified interaction with protected objects (Got rid of Give_Go_Ahead)
+- Allow work budgets to expire without disabling stack safe recursion.
+- Added Work Sharing Parallel Link List append to work seeking parallel linked list example
+- Added Composite Reducing Stack Safe Recursion example
+- Added variants for recursion for the parallel tree container.
+- Major cleanup of output for test drivers
+- prints test name before test starts, so that one can tell which test is being run.
+- Added more sequential examples to provide better comparison against the parallel versions.
+- Allow work budgets to be specified for stack safe recursion
+- Added Stack Safe Reducing variants to parallel tree container
+- Added other stack safe reducing examples.
+- Allow disabling of the unbalanced iteration tests
+- Removed unneeded debug parameters for parallel generics
+- Build is fixed for linux
+- Added parallelism limits for Fibonacci examples
+
+
+Paraffin-1.9
+- Fixed numerous bugs with the stack safe recursion generics
+- Added stack safe iteration generics that dont involve reduction results
+- Added composite stack safe reducing generic.
+- Stack safe generics return an output value indicating the number of times
+  the stack threshold was crossed, resulting in work deferral.
+
+Paraffin-1.8
+- Default worker count for iterative generics now calculates optimal value
+  based on the number of iterations and the number of available CPUs.
+- Removed Image functions and parameters used for debugging, as well as
+  debugging code that utilized the image function.
+- Added new generic, parallel-recursion-elementary_splitting_recurse.
+  This is a new type of generic that allows you to recursively iterate
+  through a structure that doesn't exist yet, for example, creating a binary 
+  tree in parallel. While this works, the test case used to test this was
+  taking longer than the sequential version for some reason. Still, this
+  might be beneficial if applied to the right problem.
+- This version can now be downloaded using git, as well as a tar file.
+  See README.txt for more details.
+
+Paraffin-1.7
+  be used for algorithms that need to know which worker is executing, such as 
+  Gauss-Jordan matrix solving, which also needs the Synchronous_Barriers in order to
+  interleave parallel code with sequential code.
+- Global pragmas relax restriction allowing synchronous_barriers to be used.
+
+Paraffin-1.6
+- Stack depth type for stack safe recursion can now only be specified as a percentage of
+  the total stack space. Before a size could alternately be specified, but that could 
+  raise an assertion is the stack depth was greater than the actual stack size (Storage_Size).
+  Now, the percentage eliminates the need for the assertion, and helps ensure that the client
+  wont get into trouble.
+
+Paraffin-1.5
+- Bug Fixes: Uninitialized variables would cause random contraint error crashes, and 
+  incorrect results to be generated.
+- Examples use Interfaces.Unsigned_32 instead of Integer, because larger iteration counts,
+  can result in arithmetic overflow. The GNAT project had overflow checking turned off,
+  but if turned on, this would be another source of contraint errors. Rather than hide
+  contraint errors, making the types modular ensures that wraparound is OK and wont crash
+  the program.
+
+Paraffin-1.4
+- Bug fix to Parallel.Iteration.Work_Seeking_Iterate. Wasn't calculating the start indexes  
+  correctly
+- Bug fix to all the iteration generics, would crash with Constraint_Error when the number of
+  iterations is less than the number of workers.
+- Use "and then" and "or else" in parallel code, should be slightly more efficient.
+- Renamed methods in the parallel binary tree container to better reflect the type of 
+  parallelism employed.
+- Parallel_Tree test driver had pragma Debugs referencing Debug_Logging variable that wasn't
+  visible. Must be a GNAT bug, it didn't complain and compiled anyway.
+
+Paraffin-1.3
+- Incorporated Stack_Limited_Work_Seeking_Iterate test case to the parallel binary tree
+  container.
+- Stack_Limited_Work_Seeking_Iterate now compiles. No longer needs to reference the package
+  Parallel.Affinity, as that package no longer exists.
+- Another GNAT dependency found and eliminated. Parallel.Recurse no longer depends on
+  System.Address_Image, which was only used for debugging.
+
+Paraffin-1.2
+-   GNAT dependencies eliminated. In theory, the code should be compilable for any Ada compiler.
+-   Added Affinity setting capabilities to the Windows target.
+-   Added more configuration targets, including "Any", which should compile on any target,
+    hopefully.
+    If you compile for this target, you lose the ability to specify Use_Affinity => True, as
+	that build does not link with code needed to set the affinity of a task which is target
+	specific.
+	Its usually recommended that the default (Use_Affinity => False) is used anyway because
+	it is rare that enabling this feature makes a difference, or at least a difference that
+	improves parallelism. If there is such a difference, it is usually very subtle and barely
+	noticeable.
+	This build (using the Any configuration) also loses the ability to determine the number
+	of CPU's on the target. If a worker count is not supplied by the client, then the default
+	is 2 workers.
+	The Windows and Linux specific adds support for setting affinity for each worker 
+	(Use_Affinity => True), and the default worker count currently is the number of
+	processors on the system. The client may specify overrides for both Use_Affinity and the
+	worker count by specifying the parameters on the generic calls.
+-   Removed some dead test code that wasn't getting compiled.
+-   Added a usage message for the paraffin test driver, in case command line parameters are not 
+    specified, or are specified incorrectly.
+-   Renamed some of the test driver files to better describe the functionality being tested.
+
+Paraffin-1.1
+-  Fixed bug crash when Use_Affinity parameter is set to true for the test_paraffin executable.
+-  Cleaned up code, use_affinity debugging code removed
+-  Storage_Size parameter added to all the generics. Sets the stack storage size for the
+   worker tasks.
+-  Allow the work-stealing examples to compile and run under the Windows build.  
+
+
+paraffin-1.0	- Initial Version

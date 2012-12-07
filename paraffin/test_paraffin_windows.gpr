@@ -1,0 +1,26 @@
+project Test_Paraffin_Windows is
+
+   for Main use ("test_paraffin.adb");
+   for Source_Dirs use ("parallel\config\windows", "parallel\internal", "parallel\iteration\**", "parallel\recursion", "test\**", "parallel", "util\containers");
+   for Object_Dir use "bin\obj";
+   for Exec_Dir use "bin";
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnatVncefimoprst", "-gnat05", "-gnatf", "-gnatp", "-gnatwc.cf.h.ijkm.op.pr.r.stu.u.w.x", "-gnatyaAbBcCefhiIklnoOprStux", "-gnatn", "-O2");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-g", "-s");
+      for Global_Configuration_Pragmas use "global_pragmas";
+   end Builder;
+
+   package Binder is
+      for Default_Switches ("ada") use ("-r");
+   end Binder;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-Wl,--gc-sections");
+   end Linker;
+
+end Test_Paraffin_Windows;
+

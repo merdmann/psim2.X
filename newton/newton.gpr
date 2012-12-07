@@ -1,0 +1,38 @@
+project Newton is
+
+  Arch := external ("ARCH");
+  Obj := "obj-" & Arch;
+
+  type Build_Type is
+    ("production", "test");
+
+  Build   : Build_Type := external ("BUILD", "production");
+
+  for Main use (external ("MAIN"));
+  for Source_Dirs use (".", "./src", "../common", "../paraffin/parallel", "../paraffin/parallel/config/linux", "../paraffin/parallel/iteration", "../paraffin/parallel/internal");
+
+  for Object_Dir use Obj;
+  for Exec_Dir use external ("BINDIR");
+
+  package Compiler is
+
+    case Build is
+
+      when "production" =>
+        for Default_Switches ("ada") use ("-g", "-gnat05", "-gnato", "-gnatwa", "-gnatQ");
+
+      when "test" =>
+        for Default_Switches ("ada") use ("-g", "-gnat05", "-gnato", "-gnatwa", "-gnatQ", "-gnata");
+    end case;
+  end Compiler;
+
+  package Builder is
+    for Default_Switches ("ada") use ("-g");
+  end Builder;
+
+  package Ide is
+    for Compiler_Command ("ada") use "gnatmake";
+    for Compiler_Command ("c") use "gcc";
+  end Ide;
+
+end Newton;

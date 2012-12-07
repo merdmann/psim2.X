@@ -1,0 +1,178 @@
+#LyX 1.6.9 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass amsart
+\use_default_options false
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+theorems-ams-extended
+linguistics
+\end_modules
+\language english
+\inputencoding default
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Parall....
+\end_layout
+
+\begin_layout Date
+1.8.2012
+\end_layout
+
+\begin_layout Address
+no addresss 
+\begin_inset Newline newline
+\end_inset
+
+somewhere 
+\begin_inset Newline newline
+\end_inset
+
+somewhere ZIP
+\end_layout
+
+\begin_layout Current Address
+Home
+\end_layout
+
+\begin_layout Email
+michael_erdmann@snafu.de
+\end_layout
+
+\begin_layout Section*
+http://michaelerdmann-berline.de/
+\end_layout
+
+\begin_layout Keywords
+Basic Assumptions
+\end_layout
+
+\begin_layout Thanks
+..
+ f..
+\end_layout
+
+\begin_layout Abstract
+This paper presents an aproach to integrate classical newtonian equations
+ of motion using numerical methods under the constraints of a limited budget
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+For a particle 
+\begin_inset Formula $i$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{dp_{i}}{dt}=\sum_{i\neq k}F(x_{i}(t),x_{j}(t))\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+F(x,y)=-F(y,x)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Presentation of Physics in GR
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "1"
+
+\end_inset
+
+As an example; Reiner Oloff, Geometrie der Raumzeit, Vieweg, ISBN 3-528-26917-0
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "2"
+
+\end_inset
+
+
+\emph on
+Ta-Pei Chend, Relativity, Gravitation and Cosmology; Oxford Master Series,
+ ISBN 0-19-852957-0
+\emph default
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "3-2"
+
+\end_inset
+
+American Mathematical Society, 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "3"
+
+\end_inset
+
+American Mathematical Society, 
+\end_layout
+
+\end_body
+\end_document

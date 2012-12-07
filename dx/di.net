@@ -1,0 +1,1029 @@
+//
+// time: Thu Sep 16 22:25:47 2010
+//
+// version: 3.2.0 (format), 4.4.4 (DX)
+//
+//
+// MODULE main
+// page assignment: Config	order=3, windowed=0, showing=0
+// page assignment: Energy	order=4, windowed=0, showing=0
+// page assignment: Files	order=2, windowed=0, showing=1
+// page assignment: Load_Data	order=6, windowed=0, showing=0
+// page assignment: Trajectroy	order=5, windowed=0, showing=0
+// workspace: width = 868, height = 750
+// layout: snap = 0, width = 30, height = 30, align = NN
+//
+macro main(
+) -> (
+) {
+    // 
+    // node ImportSpreadsheet[6]: x = 117, y = 72, inputs = 10, label = ImportSpreadsheet
+    // input[1]: defaulting = 0, visible = 1, type = 32, value = "config.data"
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = ";"
+    // input[3]: defaulting = 0, visible = 0, type = 16777248, value = { "RS", "DT", "P1", "P2", "SC", "FN" }
+    // input[10]: defaulting = 1, visible = 0, type = 1, value = 1
+    // page group: Config
+    //
+main_ImportSpreadsheet_6_out_1,
+main_ImportSpreadsheet_6_out_2 = 
+    ImportSpreadsheet(
+    main_ImportSpreadsheet_6_in_1,
+    main_ImportSpreadsheet_6_in_2,
+    main_ImportSpreadsheet_6_in_3,
+    main_ImportSpreadsheet_6_in_4,
+    main_ImportSpreadsheet_6_in_5,
+    main_ImportSpreadsheet_6_in_6,
+    main_ImportSpreadsheet_6_in_7,
+    main_ImportSpreadsheet_6_in_8,
+    main_ImportSpreadsheet_6_in_9,
+    main_ImportSpreadsheet_6_in_10
+    ) [instance: 6, cache: 1];
+    // 
+    // node Extract[39]: x = 731, y = 245, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 0, type = 32, value = "FN"
+    // page group: Config
+    //
+main_Extract_39_out_1 = 
+    Extract(
+    main_ImportSpreadsheet_6_out_1,
+    main_Extract_39_in_2
+    ) [instance: 39, cache: 1];
+    // 
+    // node Transmitter[9]: x = 724, y = 598, inputs = 1, label = FileName
+    // page group: Config
+    //
+FileName = main_Extract_39_out_1;
+    // 
+    // node Receiver[15]: x = 176, y = 89, inputs = 1, label = FileName
+    // page group: Files
+    //
+main_Receiver_15_out_1[cache: 0] = FileName;
+    // 
+    // node ImportSpreadsheet[7]: x = 176, y = 225, inputs = 10, label = IMport Data
+    // input[1]: defaulting = 1, visible = 1, type = 32, value = "ekin.data"
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = ";"
+    // input[3]: defaulting = 0, visible = 0, type = 16777248, value = { "T0", "M", "X1", "X2", "X3", "V1" ,"V2", "V3", "PN"}
+    // input[4]: defaulting = 0, visible = 0, type = 32, value = "1-d"
+    // input[5]: defaulting = 1, visible = 0, type = 16777248, value = {"allstring"}
+    // input[9]: defaulting = 1, visible = 0, type = 1, value = 1
+    // input[10]: defaulting = 1, visible = 0, type = 1, value = 1
+    // page group: Files
+    //
+main_ImportSpreadsheet_7_out_1[cache: 2],
+main_ImportSpreadsheet_7_out_2[cache: 2] = 
+    ImportSpreadsheet(
+    main_Receiver_15_out_1,
+    main_ImportSpreadsheet_7_in_2,
+    main_ImportSpreadsheet_7_in_3,
+    main_ImportSpreadsheet_7_in_4,
+    main_ImportSpreadsheet_7_in_5,
+    main_ImportSpreadsheet_7_in_6,
+    main_ImportSpreadsheet_7_in_7,
+    main_ImportSpreadsheet_7_in_8,
+    main_ImportSpreadsheet_7_in_9,
+    main_ImportSpreadsheet_7_in_10
+    ) [instance: 7, cache: 1];
+    // 
+    // node Transmitter[10]: x = 170, y = 688, inputs = 1, label = TrajectoryData
+    // page group: Files
+    //
+TrajectoryData = main_ImportSpreadsheet_7_out_1;
+    // 
+    // node Receiver[17]: x = 559, y = 154, inputs = 1, label = TrajectoryData
+    // page group: Load_Data
+    //
+main_Receiver_17_out_1[cache: 0] = TrajectoryData;
+    // 
+    // node Extract[26]: x = 54, y = 452, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "X1"
+    // page group: Load_Data
+    //
+main_Extract_26_out_1 = 
+    Extract(
+    main_Receiver_17_out_1,
+    main_Extract_26_in_2
+    ) [instance: 26, cache: 1];
+    // 
+    // node Extract[27]: x = 154, y = 452, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "X2"
+    // page group: Load_Data
+    //
+main_Extract_27_out_1 = 
+    Extract(
+    main_Receiver_17_out_1,
+    main_Extract_27_in_2
+    ) [instance: 27, cache: 1];
+    // 
+    // node Extract[28]: x = 254, y = 452, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "X3"
+    // page group: Load_Data
+    //
+main_Extract_28_out_1 = 
+    Extract(
+    main_Receiver_17_out_1,
+    main_Extract_28_in_2
+    ) [instance: 28, cache: 1];
+    // 
+    // node Extract[38]: x = 582, y = 245, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 0, type = 32, value = "SC"
+    // page group: Config
+    //
+main_Extract_38_out_1 = 
+    Extract(
+    main_ImportSpreadsheet_6_out_1,
+    main_Extract_38_in_2
+    ) [instance: 38, cache: 1];
+    // 
+    // node Transmitter[8]: x = 590, y = 603, inputs = 1, label = scale
+    // page group: Config
+    //
+scale = main_Extract_38_out_1;
+    // 
+    // node Receiver[13]: x = 210, y = 154, inputs = 1, label = scale
+    // page group: Load_Data
+    //
+main_Receiver_13_out_1[cache: 0] = scale;
+    // 
+    // node Compute[10]: x = 145, y = 584, inputs = 5, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "[$0/$3,$1/$3,$2/$3]"
+    // page group: Load_Data
+    // expression: value = [a/scale,b/scale,c/scale]
+    // name[2]: value = a
+    // name[3]: value = b
+    // name[4]: value = c
+    // name[5]: value = scale
+    //
+main_Compute_10_out_1 = 
+    Compute(
+    main_Compute_10_in_1,
+    main_Extract_26_out_1,
+    main_Extract_27_out_1,
+    main_Extract_28_out_1,
+    main_Receiver_13_out_1
+    ) [instance: 10, cache: 1];
+    // 
+    // node Transmitter[1]: x = 161, y = 755, inputs = 1, label = trajectory
+    // page group: Load_Data
+    //
+trajectory = main_Compute_10_out_1;
+    // 
+    // node Receiver[6]: x = 148, y = 3, inputs = 1, label = trajectory
+    // page group: Trajectroy
+    //
+main_Receiver_6_out_1[cache: 0] = trajectory;
+    // 
+    // node Extract[29]: x = 586, y = 452, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "V1"
+    // page group: Load_Data
+    //
+main_Extract_29_out_1 = 
+    Extract(
+    main_Receiver_17_out_1,
+    main_Extract_29_in_2
+    ) [instance: 29, cache: 1];
+    // 
+    // node Extract[30]: x = 691, y = 452, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "V2"
+    // page group: Load_Data
+    //
+main_Extract_30_out_1 = 
+    Extract(
+    main_Receiver_17_out_1,
+    main_Extract_30_in_2
+    ) [instance: 30, cache: 1];
+    // 
+    // node Extract[31]: x = 783, y = 452, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "V3"
+    // page group: Load_Data
+    //
+main_Extract_31_out_1 = 
+    Extract(
+    main_Receiver_17_out_1,
+    main_Extract_31_in_2
+    ) [instance: 31, cache: 1];
+    // 
+    // node Compute[12]: x = 682, y = 639, inputs = 4, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "[$0/1000,$1/1000,$2/1000]"
+    // page group: Load_Data
+    // expression: value = [V1/1000,V2/1000,V3/1000]
+    // name[2]: value = V1
+    // name[3]: value = V2
+    // name[4]: value = V3
+    //
+main_Compute_12_out_1 = 
+    Compute(
+    main_Compute_12_in_1,
+    main_Extract_29_out_1,
+    main_Extract_30_out_1,
+    main_Extract_31_out_1
+    ) [instance: 12, cache: 1];
+    // 
+    // node Transmitter[2]: x = 691, y = 753, inputs = 1, label = velocity
+    // page group: Load_Data
+    //
+velocity = main_Compute_12_out_1;
+    // 
+    // node Receiver[7]: x = 398, y = 6, inputs = 1, label = velocity
+    // page group: Trajectroy
+    //
+main_Receiver_7_out_1[cache: 0] = velocity;
+    // 
+    // node Extract[32]: x = 871, y = 452, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "M"
+    // page group: Load_Data
+    //
+main_Extract_32_out_1 = 
+    Extract(
+    main_Receiver_17_out_1,
+    main_Extract_32_in_2
+    ) [instance: 32, cache: 1];
+    // 
+    // node Transmitter[4]: x = 879, y = 746, inputs = 1, label = mass
+    // page group: Load_Data
+    //
+mass = main_Extract_32_out_1;
+    // 
+    // node Receiver[8]: x = 556, y = 4, inputs = 1, label = mass
+    // page group: Trajectroy
+    //
+main_Receiver_8_out_1[cache: 0] = mass;
+    // 
+    // node Compute[16]: x = 458, y = 100, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "0.5*$1*($0.x**2+$0.y**2+$0.z**2)"
+    // page group: Trajectroy
+    // expression: value = 0.5*m*(a.x**2+a.y**2+a.z**2)
+    // name[2]: value = a
+    // name[3]: value = m
+    //
+main_Compute_16_out_1 = 
+    Compute(
+    main_Compute_16_in_1,
+    main_Receiver_7_out_1,
+    main_Receiver_8_out_1
+    ) [instance: 16, cache: 1];
+    // 
+    // node Construct[13]: x = 290, y = 217, inputs = 4, label = Construct
+    // input[2]: visible = 0
+    // input[3]: visible = 0
+    // page group: Trajectroy
+    //
+main_Construct_13_out_1 = 
+    Construct(
+    main_Receiver_6_out_1,
+    main_Construct_13_in_2,
+    main_Construct_13_in_3,
+    main_Compute_16_out_1
+    ) [instance: 13, cache: 1];
+    // 
+    // node AutoColor[3]: x = 289, y = 292, inputs = 10, label = AutoColor
+    // input[7]: defaulting = 1, visible = 0, type = 5, value = 0.0
+    // input[8]: defaulting = 1, visible = 0, type = 5, value = 250000.0
+    // page group: Trajectroy
+    //
+main_AutoColor_3_out_1,
+main_AutoColor_3_out_2 = 
+    AutoColor(
+    main_Construct_13_out_1,
+    main_AutoColor_3_in_2,
+    main_AutoColor_3_in_3,
+    main_AutoColor_3_in_4,
+    main_AutoColor_3_in_5,
+    main_AutoColor_3_in_6,
+    main_AutoColor_3_in_7,
+    main_AutoColor_3_in_8,
+    main_AutoColor_3_in_9,
+    main_AutoColor_3_in_10
+    ) [instance: 3, cache: 1];
+    // 
+    // node ColorBar[1]: x = 335, y = 371, inputs = 16, label = ColorBar
+    // input[8]: defaulting = 0, visible = 1, type = 32, value = "Kinetic Energy [kg km**2/s**2]"
+    // input[11]: defaulting = 0, visible = 0, type = 5, value = 0.7
+    // page group: Trajectroy
+    //
+main_ColorBar_1_out_1 = 
+    ColorBar(
+    main_AutoColor_3_out_2,
+    main_ColorBar_1_in_2,
+    main_ColorBar_1_in_3,
+    main_ColorBar_1_in_4,
+    main_ColorBar_1_in_5,
+    main_ColorBar_1_in_6,
+    main_ColorBar_1_in_7,
+    main_ColorBar_1_in_8,
+    main_ColorBar_1_in_9,
+    main_ColorBar_1_in_10,
+    main_ColorBar_1_in_11,
+    main_ColorBar_1_in_12,
+    main_ColorBar_1_in_13,
+    main_ColorBar_1_in_14,
+    main_ColorBar_1_in_15,
+    main_ColorBar_1_in_16
+    ) [instance: 1, cache: 1];
+    // 
+    // node Extract[34]: x = 88, y = 217, inputs = 2, label = Extract
+    // input[1]: defaulting = 1, visible = 1, type = 2048, value = NULL
+    // input[2]: defaulting = 0, visible = 0, type = 32, value = "RS"
+    // page group: Config
+    //
+main_Extract_34_out_1 = 
+    Extract(
+    main_ImportSpreadsheet_6_out_1,
+    main_Extract_34_in_2
+    ) [instance: 34, cache: 1];
+    // 
+    // node Compute[17]: x = 98, y = 320, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0/1000"
+    // page group: Config
+    // expression: value = a/1000
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+main_Compute_17_out_1 = 
+    Compute(
+    main_Compute_17_in_1,
+    main_Extract_34_out_1,
+    main_Compute_17_in_3
+    ) [instance: 17, cache: 1];
+    // 
+    // node Extract[35]: x = 225, y = 218, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 0, type = 32, value = "DT"
+    // page group: Config
+    //
+main_Extract_35_out_1 = 
+    Extract(
+    main_ImportSpreadsheet_6_out_1,
+    main_Extract_35_in_2
+    ) [instance: 35, cache: 1];
+    // 
+    // node Format[2]: x = 167, y = 403, inputs = 3, label = Format
+    // input[1]: defaulting = 0, visible = 1, type = 32, value = "Simulation Parameters\n  RS=%g  km\n  DT=%g s"
+    // page group: Config
+    //
+main_Format_2_out_1 = 
+    Format(
+    main_Format_2_in_1,
+    main_Compute_17_out_1,
+    main_Extract_35_out_1
+    ) [instance: 2, cache: 1];
+    // 
+    // node Transmitter[6]: x = 114, y = 601, inputs = 1, label = InfoString
+    // page group: Config
+    //
+InfoString = main_Format_2_out_1;
+    // 
+    // node Receiver[10]: x = 620, y = 7, inputs = 1, label = InfoString
+    // page group: Trajectroy
+    //
+main_Receiver_10_out_1[cache: 0] = InfoString;
+    // 
+    // node Caption[1]: x = 639, y = 371, inputs = 9, label = Caption
+    // input[1]: defaulting = 1, visible = 1, type = 32, value = "Test"
+    // input[2]: defaulting = 0, visible = 1, type = 8, value = [ 0.0 1.0]
+    // page group: Trajectroy
+    //
+main_Caption_1_out_1 = 
+    Caption(
+    main_Receiver_10_out_1,
+    main_Caption_1_in_2,
+    main_Caption_1_in_3,
+    main_Caption_1_in_4,
+    main_Caption_1_in_5,
+    main_Caption_1_in_6,
+    main_Caption_1_in_7,
+    main_Caption_1_in_8,
+    main_Caption_1_in_9
+    ) [instance: 1, cache: 1];
+    // 
+    // node Extract[36]: x = 362, y = 231, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 0, type = 32, value = "P1"
+    // page group: Config
+    //
+main_Extract_36_out_1 = 
+    Extract(
+    main_ImportSpreadsheet_6_out_1,
+    main_Extract_36_in_2
+    ) [instance: 36, cache: 1];
+    // 
+    // node Extract[37]: x = 459, y = 234, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 0, type = 32, value = "P2"
+    // page group: Config
+    //
+main_Extract_37_out_1 = 
+    Extract(
+    main_ImportSpreadsheet_6_out_1,
+    main_Extract_37_in_2
+    ) [instance: 37, cache: 1];
+    // 
+    // node Format[3]: x = 378, y = 375, inputs = 3, label = Format
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "Initial Values\n%s\n%s"
+    // page group: Config
+    //
+main_Format_3_out_1 = 
+    Format(
+    main_Format_3_in_1,
+    main_Extract_36_out_1,
+    main_Extract_37_out_1
+    ) [instance: 3, cache: 1];
+    // 
+    // node Transmitter[7]: x = 376, y = 606, inputs = 1, label = Position
+    // page group: Config
+    //
+Position = main_Format_3_out_1;
+    // 
+    // node Receiver[11]: x = 766, y = 9, inputs = 1, label = Position
+    // page group: Trajectroy
+    //
+main_Receiver_11_out_1[cache: 0] = Position;
+    // 
+    // node Caption[2]: x = 766, y = 371, inputs = 9, label = Caption
+    // input[2]: defaulting = 0, visible = 0, type = 8, value = [0.0 0.0]
+    // page group: Trajectroy
+    //
+main_Caption_2_out_1 = 
+    Caption(
+    main_Receiver_11_out_1,
+    main_Caption_2_in_2,
+    main_Caption_2_in_3,
+    main_Caption_2_in_4,
+    main_Caption_2_in_5,
+    main_Caption_2_in_6,
+    main_Caption_2_in_7,
+    main_Caption_2_in_8,
+    main_Caption_2_in_9
+    ) [instance: 2, cache: 1];
+    // 
+    // node Collect[3]: x = 359, y = 492, inputs = 4, label = Collect
+    // page group: Trajectroy
+    //
+main_Collect_3_out_1 = 
+    Collect(
+    main_AutoColor_3_out_1,
+    main_ColorBar_1_out_1,
+    main_Caption_1_out_1,
+    main_Caption_2_out_1
+    ) [instance: 3, cache: 1];
+    // 
+    // node AutoCamera[1]: x = 444, y = 576, inputs = 9, label = AutoCamera
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "off-diagonal"
+    // input[4]: defaulting = 0, visible = 1, type = 1, value = 900
+    // input[7]: defaulting = 0, visible = 0, type = 3, value = 1
+    // input[8]: defaulting = 0, visible = 1, type = 5, value = 15.0
+    // page group: Trajectroy
+    //
+main_AutoCamera_1_out_1 = 
+    AutoCamera(
+    main_Collect_3_out_1,
+    main_AutoCamera_1_in_2,
+    main_AutoCamera_1_in_3,
+    main_AutoCamera_1_in_4,
+    main_AutoCamera_1_in_5,
+    main_AutoCamera_1_in_6,
+    main_AutoCamera_1_in_7,
+    main_AutoCamera_1_in_8,
+    main_AutoCamera_1_in_9
+    ) [instance: 1, cache: 1];
+    // 
+    // node AutoAxes[1]: x = 340, y = 671, inputs = 19, label = AutoAxes
+    // input[3]: defaulting = 0, visible = 1, type = 16777248, value = { "x" "y" "z" }
+    // input[6]: defaulting = 0, visible = 0, type = 3, value = 1
+    // input[7]: defaulting = 0, visible = 0, type = 3, value = 0
+    // input[9]: defaulting = 0, visible = 1, type = 3, value = 1
+    // input[12]: defaulting = 0, visible = 0, type = 5, value = 0.7
+    // page group: Trajectroy
+    //
+main_AutoAxes_1_out_1 = 
+    AutoAxes(
+    main_Collect_3_out_1,
+    main_AutoCamera_1_out_1,
+    main_AutoAxes_1_in_3,
+    main_AutoAxes_1_in_4,
+    main_AutoAxes_1_in_5,
+    main_AutoAxes_1_in_6,
+    main_AutoAxes_1_in_7,
+    main_AutoAxes_1_in_8,
+    main_AutoAxes_1_in_9,
+    main_AutoAxes_1_in_10,
+    main_AutoAxes_1_in_11,
+    main_AutoAxes_1_in_12,
+    main_AutoAxes_1_in_13,
+    main_AutoAxes_1_in_14,
+    main_AutoAxes_1_in_15,
+    main_AutoAxes_1_in_16,
+    main_AutoAxes_1_in_17,
+    main_AutoAxes_1_in_18,
+    main_AutoAxes_1_in_19
+    ) [instance: 1, cache: 1];
+    // 
+    // node Extract[33]: x = 371, y = 452, inputs = 2, label = Extract
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "T0"
+    // page group: Load_Data
+    //
+main_Extract_33_out_1 = 
+    Extract(
+    main_Receiver_17_out_1,
+    main_Extract_33_in_2
+    ) [instance: 33, cache: 1];
+    // 
+    // node Transmitter[3]: x = 382, y = 752, inputs = 1, label = time
+    // page group: Load_Data
+    //
+time = main_Extract_33_out_1;
+    // 
+    // node Receiver[5]: x = 291, y = 83, inputs = 1, label = time
+    // page group: Energy
+    //
+main_Receiver_5_out_1[cache: 0] = time;
+    // 
+    // node Compute[18]: x = 184, y = 165, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0/(24*60*60)"
+    // page group: Energy
+    // expression: value = a/(24*60*60)
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+main_Compute_18_out_1 = 
+    Compute(
+    main_Compute_18_in_1,
+    main_Receiver_5_out_1,
+    main_Compute_18_in_3
+    ) [instance: 18, cache: 1];
+    // 
+    // node Receiver[4]: x = 353, y = 83, inputs = 1, label = velocity
+    // page group: Energy
+    //
+main_Receiver_4_out_1[cache: 0] = velocity;
+    // 
+    // node Receiver[9]: x = 437, y = 82, inputs = 1, label = mass
+    // page group: Energy
+    //
+main_Receiver_9_out_1[cache: 0] = mass;
+    // 
+    // node Compute[14]: x = 363, y = 167, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "0.5*$1*($0.x**2+$0.y**2+$0.z**2)"
+    // page group: Energy
+    // expression: value = 0.5*mass*(a.x**2+a.y**2+a.z**2)
+    // name[2]: value = a
+    // name[3]: value = mass
+    //
+main_Compute_14_out_1 = 
+    Compute(
+    main_Compute_14_in_1,
+    main_Receiver_4_out_1,
+    main_Receiver_9_out_1
+    ) [instance: 14, cache: 1];
+    // 
+    // node Construct[12]: x = 288, y = 268, inputs = 4, label = Construct
+    // input[2]: visible = 0
+    // input[3]: visible = 0
+    // input[4]: defaulting = 1, visible = 1, type = 16777245, value = NULL
+    // page group: Energy
+    //
+main_Construct_12_out_1 = 
+    Construct(
+    main_Compute_18_out_1,
+    main_Construct_12_in_2,
+    main_Construct_12_in_3,
+    main_Compute_14_out_1
+    ) [instance: 12, cache: 1];
+    // 
+    // node Plot[2]: x = 314, y = 388, inputs = 26, label = Plot
+    // input[2]: defaulting = 0, visible = 1, type = 16777248, value = { "Time[days]", "Kinetic Energy [kg*m**2/sec**2]"}
+    // input[3]: defaulting = 1, visible = 0, type = 16777217, value = NULL
+    // input[5]: defaulting = 0, visible = 0, type = 3, value = 1
+    // input[6]: defaulting = 0, visible = 0, type = 1, value = 1
+    // input[7]: defaulting = 0, visible = 1, type = 16777248, value = {"lin", "lin"}
+    // input[8]: defaulting = 0, visible = 0, type = 1, value = NULL
+    // input[9]: defaulting = 0, visible = 1, type = 5, value = NULL
+    // input[10]: defaulting = 0, visible = 1, type = 16777248, value = {"red"}
+    // input[11]: defaulting = 0, visible = 1, type = 16777248, value = {"ticks" "axes"}
+    // input[12]: defaulting = 0, visible = 1, type = 5, value = 0.7
+    // page group: Energy
+    //
+main_Plot_2_out_1 = 
+    Plot(
+    main_Construct_12_out_1,
+    main_Plot_2_in_2,
+    main_Plot_2_in_3,
+    main_Plot_2_in_4,
+    main_Plot_2_in_5,
+    main_Plot_2_in_6,
+    main_Plot_2_in_7,
+    main_Plot_2_in_8,
+    main_Plot_2_in_9,
+    main_Plot_2_in_10,
+    main_Plot_2_in_11,
+    main_Plot_2_in_12,
+    main_Plot_2_in_13,
+    main_Plot_2_in_14,
+    main_Plot_2_in_15,
+    main_Plot_2_in_16,
+    main_Plot_2_in_17,
+    main_Plot_2_in_18,
+    main_Plot_2_in_19,
+    main_Plot_2_in_20,
+    main_Plot_2_in_21,
+    main_Plot_2_in_22,
+    main_Plot_2_in_23,
+    main_Plot_2_in_24,
+    main_Plot_2_in_25,
+    main_Plot_2_in_26
+    ) [instance: 2, cache: 1];
+    // 
+    // node AutoCamera[3]: x = 428, y = 493, inputs = 9, label = AutoCamera
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "front"
+    // input[4]: defaulting = 0, visible = 1, type = 1, value = 900
+    // input[7]: defaulting = 0, visible = 0, type = 3, value = 1
+    // input[8]: defaulting = 0, visible = 1, type = 5, value = NULL
+    // page group: Energy
+    //
+main_AutoCamera_3_out_1 = 
+    AutoCamera(
+    main_Plot_2_out_1,
+    main_AutoCamera_3_in_2,
+    main_AutoCamera_3_in_3,
+    main_AutoCamera_3_in_4,
+    main_AutoCamera_3_in_5,
+    main_AutoCamera_3_in_6,
+    main_AutoCamera_3_in_7,
+    main_AutoCamera_3_in_8,
+    main_AutoCamera_3_in_9
+    ) [instance: 3, cache: 1];
+    // 
+    // node Describe[1]: x = 509, y = 575, inputs = 2, label = Describe
+    // page group: Files
+    //
+    Describe(
+    main_ImportSpreadsheet_7_out_1,
+    main_Describe_1_in_2
+    ) [instance: 1, cache: 1];
+    // 
+    // node Render[1]: x = 374, y = 789, inputs = 3, label = MyImage
+    // page group: Trajectroy
+    //
+main_Render_1_out_1 = 
+    Render(
+    main_AutoAxes_1_out_1,
+    main_AutoCamera_1_out_1,
+    main_Render_1_in_3
+    ) [instance: 1, cache: 1];
+    // 
+    // node Display[1]: x = 326, y = 904, inputs = 8, label = Display
+    // page group: Trajectroy
+    // depth: value = 24
+    // window: position = (0.0078,0.1875), size = 0.4760x0.5975, screen = 0
+    //
+main_Display_1_out_1[cache: 2] = 
+    Display(
+    main_Render_1_out_1,
+    main_Display_1_in_2,
+    main_Display_1_in_3,
+    main_Display_1_in_4,
+    main_Display_1_in_5,
+    main_Display_1_in_6,
+    main_Display_1_in_7,
+    main_Display_1_in_8
+    ) [instance: 1, cache: 1];
+    // 
+    // node Render[3]: x = 342, y = 571, inputs = 3, label = MyImage
+    // page group: Energy
+    //
+main_Render_3_out_1 = 
+    Render(
+    main_Plot_2_out_1,
+    main_AutoCamera_3_out_1,
+    main_Render_3_in_3
+    ) [instance: 3, cache: 1];
+    // 
+    // node Display[4]: x = 411, y = 698, inputs = 8, label = Display
+    // input[2]: visible = 0
+    // page group: Energy
+    // depth: value = 24
+    // window: position = (0.0078,0.1875), size = 0.4760x0.5975, screen = 0
+    //
+main_Display_4_out_1[cache: 2] = 
+    Display(
+    main_Render_3_out_1,
+    main_Display_4_in_2,
+    main_Display_4_in_3,
+    main_Display_4_in_4,
+    main_Display_4_in_5,
+    main_Display_4_in_6,
+    main_Display_4_in_7,
+    main_Display_4_in_8
+    ) [instance: 4, cache: 1];
+    // 
+    // node Echo[3]: x = 846, y = 476, inputs = 2, label = Echo
+    // page group: Config
+    //
+    Echo(
+    main_Extract_39_out_1,
+    main_Echo_3_in_2
+    ) [instance: 3, cache: 1];
+    // 
+    // node Echo[4]: x = 231, y = 529, inputs = 2, label = Echo
+    // page group: Config
+    //
+    Echo(
+    main_Format_2_out_1,
+    main_Echo_4_in_2
+    ) [instance: 4, cache: 1];
+    // 
+    // node Echo[5]: x = 369, y = 347, inputs = 2, label = Echo
+    // page group: Files
+    //
+    Echo(
+    main_ImportSpreadsheet_7_out_2,
+    main_Echo_5_in_2
+    ) [instance: 5, cache: 1];
+    // 
+    // node Switch[1]: x = 832, y = 572, inputs = 3, label = Switch
+    // page group: Energy
+    //
+main_Switch_1_out_1 = 
+    Switch(
+    main_Switch_1_in_1,
+    main_Switch_1_in_2,
+    main_Switch_1_in_3
+    ) [instance: 1, cache: 1];
+    // 
+    // node WriteImage[1]: x = 420, y = 903, inputs = 4, label = WriteImage
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "trajectory.tiff"
+    // input[3]: defaulting = 0, visible = 1, type = 32, value = "tiff"
+    // input[4]: defaulting = 0, visible = 1, type = 1, value = NULL
+    // page group: Trajectroy
+    //
+    WriteImage(
+    main_Render_1_out_1,
+    main_WriteImage_1_in_2,
+    main_WriteImage_1_in_3,
+    main_WriteImage_1_in_4
+    ) [instance: 1, cache: 1];
+    // 
+    // node WriteImage[3]: x = 283, y = 698, inputs = 4, label = WriteImage
+    // input[2]: defaulting = 0, visible = 0, type = 32, value = "energy.tiff"
+    // input[3]: defaulting = 0, visible = 0, type = 32, value = "tiff"
+    // input[4]: visible = 0
+    // page group: Energy
+    //
+    WriteImage(
+    main_Render_3_out_1,
+    main_WriteImage_3_in_2,
+    main_WriteImage_3_in_3,
+    main_WriteImage_3_in_4
+    ) [instance: 3, cache: 1];
+    //
+    // decorator Annotate	pos=(10,21) size=360x28 style(Label), value = <NULL>
+    // annotation user_begin: 51
+    // annotation user: This module drwa the kinetic energy of the particle
+    // annotation user_end: <NULL>
+    // page group: Energy
+    //
+    // decorator Annotate	pos=(855,183) size=427x28 style(Label), value = <NULL>
+    // annotation user_begin: 62
+    // annotation user: This sheet  creates a presentation of an individual trajectory
+    // annotation user_end: <NULL>
+    // page group: Trajectroy
+    //
+    // decorator Annotate	pos=(375,95) size=493x28 style(Label), value = <NULL>
+    // annotation user_begin: 70
+    // annotation user: Load a given data file and contegorize it based on the particle number
+    // annotation user_end: <NULL>
+    // page group: Files
+// network: end of macro body
+}
+main_ImportSpreadsheet_6_in_1 = "config.data";
+main_ImportSpreadsheet_6_in_2 = ";";
+main_ImportSpreadsheet_6_in_3 = { "RS", "DT", "P1", "P2", "SC", "FN" };
+main_ImportSpreadsheet_6_in_4 = NULL;
+main_ImportSpreadsheet_6_in_5 = NULL;
+main_ImportSpreadsheet_6_in_6 = NULL;
+main_ImportSpreadsheet_6_in_7 = NULL;
+main_ImportSpreadsheet_6_in_8 = NULL;
+main_ImportSpreadsheet_6_in_9 = NULL;
+main_ImportSpreadsheet_6_in_10 = NULL;
+main_ImportSpreadsheet_6_out_1 = NULL;
+main_Extract_39_in_2 = "FN";
+main_Extract_39_out_1 = NULL;
+main_Transmitter_9_out_1 = NULL;
+main_Receiver_15_out_1 = NULL;
+main_ImportSpreadsheet_7_in_2 = ";";
+main_ImportSpreadsheet_7_in_3 = { "T0", "M", "X1", "X2", "X3", "V1" ,"V2", "V3", "PN"};
+main_ImportSpreadsheet_7_in_4 = "1-d";
+main_ImportSpreadsheet_7_in_5 = NULL;
+main_ImportSpreadsheet_7_in_6 = NULL;
+main_ImportSpreadsheet_7_in_7 = NULL;
+main_ImportSpreadsheet_7_in_8 = NULL;
+main_ImportSpreadsheet_7_in_9 = NULL;
+main_ImportSpreadsheet_7_in_10 = NULL;
+main_ImportSpreadsheet_7_out_1 = NULL;
+main_ImportSpreadsheet_7_out_2 = NULL;
+main_Transmitter_10_out_1 = NULL;
+main_Receiver_17_out_1 = NULL;
+main_Extract_26_in_2 = "X1";
+main_Extract_26_out_1 = NULL;
+main_Extract_27_in_2 = "X2";
+main_Extract_27_out_1 = NULL;
+main_Extract_28_in_2 = "X3";
+main_Extract_28_out_1 = NULL;
+main_Extract_38_in_2 = "SC";
+main_Extract_38_out_1 = NULL;
+main_Transmitter_8_out_1 = NULL;
+main_Receiver_13_out_1 = NULL;
+main_Compute_10_in_1 = "[$0/$3,$1/$3,$2/$3]";
+main_Compute_10_out_1 = NULL;
+main_Transmitter_1_out_1 = NULL;
+main_Receiver_6_out_1 = NULL;
+main_Extract_29_in_2 = "V1";
+main_Extract_29_out_1 = NULL;
+main_Extract_30_in_2 = "V2";
+main_Extract_30_out_1 = NULL;
+main_Extract_31_in_2 = "V3";
+main_Extract_31_out_1 = NULL;
+main_Compute_12_in_1 = "[$0/1000,$1/1000,$2/1000]";
+main_Compute_12_out_1 = NULL;
+main_Transmitter_2_out_1 = NULL;
+main_Receiver_7_out_1 = NULL;
+main_Extract_32_in_2 = "M";
+main_Extract_32_out_1 = NULL;
+main_Transmitter_4_out_1 = NULL;
+main_Receiver_8_out_1 = NULL;
+main_Compute_16_in_1 = "0.5*$1*($0.x**2+$0.y**2+$0.z**2)";
+main_Compute_16_out_1 = NULL;
+main_Construct_13_in_2 = NULL;
+main_Construct_13_in_3 = NULL;
+main_Construct_13_out_1 = NULL;
+main_AutoColor_3_in_2 = NULL;
+main_AutoColor_3_in_3 = NULL;
+main_AutoColor_3_in_4 = NULL;
+main_AutoColor_3_in_5 = NULL;
+main_AutoColor_3_in_6 = NULL;
+main_AutoColor_3_in_7 = NULL;
+main_AutoColor_3_in_8 = NULL;
+main_AutoColor_3_in_9 = NULL;
+main_AutoColor_3_in_10 = NULL;
+main_AutoColor_3_out_1 = NULL;
+main_AutoColor_3_out_2 = NULL;
+main_ColorBar_1_in_2 = NULL;
+main_ColorBar_1_in_3 = NULL;
+main_ColorBar_1_in_4 = NULL;
+main_ColorBar_1_in_5 = NULL;
+main_ColorBar_1_in_6 = NULL;
+main_ColorBar_1_in_7 = NULL;
+main_ColorBar_1_in_8 = "Kinetic Energy [kg km**2/s**2]";
+main_ColorBar_1_in_9 = NULL;
+main_ColorBar_1_in_10 = NULL;
+main_ColorBar_1_in_11 = 0.7;
+main_ColorBar_1_in_12 = NULL;
+main_ColorBar_1_in_13 = NULL;
+main_ColorBar_1_in_14 = NULL;
+main_ColorBar_1_in_15 = NULL;
+main_ColorBar_1_in_16 = NULL;
+main_ColorBar_1_out_1 = NULL;
+main_Extract_34_in_2 = "RS";
+main_Extract_34_out_1 = NULL;
+main_Compute_17_in_1 = "$0/1000";
+main_Compute_17_in_3 = NULL;
+main_Compute_17_out_1 = NULL;
+main_Extract_35_in_2 = "DT";
+main_Extract_35_out_1 = NULL;
+main_Format_2_in_1 = "Simulation Parameters\n  RS=%g  km\n  DT=%g s";
+main_Format_2_out_1 = NULL;
+main_Transmitter_6_out_1 = NULL;
+main_Receiver_10_out_1 = NULL;
+main_Caption_1_in_2 = [ 0.0 1.0];
+main_Caption_1_in_3 = NULL;
+main_Caption_1_in_4 = NULL;
+main_Caption_1_in_5 = NULL;
+main_Caption_1_in_6 = NULL;
+main_Caption_1_in_7 = NULL;
+main_Caption_1_in_8 = NULL;
+main_Caption_1_in_9 = NULL;
+main_Caption_1_out_1 = NULL;
+main_Extract_36_in_2 = "P1";
+main_Extract_36_out_1 = NULL;
+main_Extract_37_in_2 = "P2";
+main_Extract_37_out_1 = NULL;
+main_Format_3_in_1 = "Initial Values\n%s\n%s";
+main_Format_3_out_1 = NULL;
+main_Transmitter_7_out_1 = NULL;
+main_Receiver_11_out_1 = NULL;
+main_Caption_2_in_2 = [0.0 0.0];
+main_Caption_2_in_3 = NULL;
+main_Caption_2_in_4 = NULL;
+main_Caption_2_in_5 = NULL;
+main_Caption_2_in_6 = NULL;
+main_Caption_2_in_7 = NULL;
+main_Caption_2_in_8 = NULL;
+main_Caption_2_in_9 = NULL;
+main_Caption_2_out_1 = NULL;
+main_Collect_3_out_1 = NULL;
+main_AutoCamera_1_in_2 = "off-diagonal";
+main_AutoCamera_1_in_3 = NULL;
+main_AutoCamera_1_in_4 = 900;
+main_AutoCamera_1_in_5 = NULL;
+main_AutoCamera_1_in_6 = NULL;
+main_AutoCamera_1_in_7 = 1;
+main_AutoCamera_1_in_8 = 15.0;
+main_AutoCamera_1_in_9 = NULL;
+main_AutoCamera_1_out_1 = NULL;
+main_AutoAxes_1_in_3 = { "x" "y" "z" };
+main_AutoAxes_1_in_4 = NULL;
+main_AutoAxes_1_in_5 = NULL;
+main_AutoAxes_1_in_6 = 1;
+main_AutoAxes_1_in_7 = 0;
+main_AutoAxes_1_in_8 = NULL;
+main_AutoAxes_1_in_9 = 1;
+main_AutoAxes_1_in_10 = NULL;
+main_AutoAxes_1_in_11 = NULL;
+main_AutoAxes_1_in_12 = 0.7;
+main_AutoAxes_1_in_13 = NULL;
+main_AutoAxes_1_in_14 = NULL;
+main_AutoAxes_1_in_15 = NULL;
+main_AutoAxes_1_in_16 = NULL;
+main_AutoAxes_1_in_17 = NULL;
+main_AutoAxes_1_in_18 = NULL;
+main_AutoAxes_1_in_19 = NULL;
+main_AutoAxes_1_out_1 = NULL;
+main_Extract_33_in_2 = "T0";
+main_Extract_33_out_1 = NULL;
+main_Transmitter_3_out_1 = NULL;
+main_Receiver_5_out_1 = NULL;
+main_Compute_18_in_1 = "$0/(24*60*60)";
+main_Compute_18_in_3 = NULL;
+main_Compute_18_out_1 = NULL;
+main_Receiver_4_out_1 = NULL;
+main_Receiver_9_out_1 = NULL;
+main_Compute_14_in_1 = "0.5*$1*($0.x**2+$0.y**2+$0.z**2)";
+main_Compute_14_out_1 = NULL;
+main_Construct_12_in_2 = NULL;
+main_Construct_12_in_3 = NULL;
+main_Construct_12_out_1 = NULL;
+main_Plot_2_in_2 = { "Time[days]", "Kinetic Energy [kg*m**2/sec**2]"};
+main_Plot_2_in_3 = NULL;
+main_Plot_2_in_4 = NULL;
+main_Plot_2_in_5 = 1;
+main_Plot_2_in_6 = 1;
+main_Plot_2_in_7 = {"lin", "lin"};
+main_Plot_2_in_8 = NULL;
+main_Plot_2_in_9 = NULL;
+main_Plot_2_in_10 = {"red"};
+main_Plot_2_in_11 = {"ticks" "axes"};
+main_Plot_2_in_12 = 0.7;
+main_Plot_2_in_13 = NULL;
+main_Plot_2_in_14 = NULL;
+main_Plot_2_in_15 = NULL;
+main_Plot_2_in_16 = NULL;
+main_Plot_2_in_17 = NULL;
+main_Plot_2_in_18 = NULL;
+main_Plot_2_in_19 = NULL;
+main_Plot_2_in_20 = NULL;
+main_Plot_2_in_21 = NULL;
+main_Plot_2_in_22 = NULL;
+main_Plot_2_in_23 = NULL;
+main_Plot_2_in_24 = NULL;
+main_Plot_2_in_25 = NULL;
+main_Plot_2_in_26 = NULL;
+main_Plot_2_out_1 = NULL;
+main_AutoCamera_3_in_2 = "front";
+main_AutoCamera_3_in_3 = NULL;
+main_AutoCamera_3_in_4 = 900;
+main_AutoCamera_3_in_5 = NULL;
+main_AutoCamera_3_in_6 = NULL;
+main_AutoCamera_3_in_7 = 1;
+main_AutoCamera_3_in_8 = NULL;
+main_AutoCamera_3_in_9 = NULL;
+main_AutoCamera_3_out_1 = NULL;
+main_Describe_1_in_2 = NULL;
+main_Render_1_in_3 = NULL;
+main_Render_1_out_1 = NULL;
+main_Display_1_in_2 = NULL;
+main_Display_1_in_3 = "X24,,";
+main_Display_1_in_4 = NULL;
+main_Display_1_in_5 = NULL;
+main_Display_1_in_6 = NULL;
+main_Display_1_in_7 = NULL;
+main_Display_1_in_8 = NULL;
+main_Render_3_in_3 = NULL;
+main_Render_3_out_1 = NULL;
+main_Display_4_in_2 = NULL;
+main_Display_4_in_3 = "X24,,";
+main_Display_4_in_4 = NULL;
+main_Display_4_in_5 = NULL;
+main_Display_4_in_6 = NULL;
+main_Display_4_in_7 = NULL;
+main_Display_4_in_8 = NULL;
+main_Echo_3_in_2 = NULL;
+main_Echo_4_in_2 = NULL;
+main_Echo_5_in_2 = NULL;
+main_Switch_1_in_1 = NULL;
+main_Switch_1_in_2 = NULL;
+main_Switch_1_in_3 = NULL;
+main_WriteImage_1_in_2 = "trajectory.tiff";
+main_WriteImage_1_in_3 = "tiff";
+main_WriteImage_1_in_4 = NULL;
+main_WriteImage_3_in_2 = "energy.tiff";
+main_WriteImage_3_in_3 = "tiff";
+main_WriteImage_3_in_4 = NULL;
+Executive("product version 4 4 4");
+$sync
+main();

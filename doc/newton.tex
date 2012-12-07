@@ -1,0 +1,243 @@
+%% LyX 1.6.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{amsart}
+\usepackage[T1]{fontenc}
+\usepackage{array}
+\usepackage{rotating}
+\usepackage{amsthm}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\numberwithin{equation}{section} %% Comment out for sequentially-numbered
+\numberwithin{figure}{section} %% Comment out for sequentially-numbered
+
+\makeatother
+
+\usepackage{babel}
+
+\begin{document}
+
+\title{newton in general relativty}
+
+
+\date{1.8.2010}
+
+
+\address{no addresss \\
+somewhere \\
+somewhere ZIP}
+
+
+\curraddr{Home}
+
+
+\email{michael\_erdmann@snafu.de}
+
+\maketitle
+
+\section*{http://michaelerdmann-berline.de/}
+
+
+\keywords{Basic Assumptions}
+
+
+\thanks{.. f..}
+\begin{abstract}
+The intention of this paper is to demonstrate that Newtons laws of
+movement for bodies can be rewirtten in a form which is naturally
+compatible with general relatity (GR) in order to trace the origin
+of the mass back to its origins within the energy stress tensor of
+the field equation for gravity.
+\end{abstract}
+
+\section{Introduction}
+
+This paper follows the following program:
+\begin{enumerate}
+\item We will chalk out how classical physics is described in comparison
+with GR
+\item Rewriting Newtons statement is terms of GR
+\item Guessing the Metric from the corresponding 
+\item Reflection about the validty of the results
+\item Some examples
+\end{enumerate}
+
+\section{Presentation of Physics in GR}
+
+In general relativity objects are described by for values $<x^{0},x^{1},x^{2},x^{3}>$.
+In classical physics, the space has not properties except for the
+fact to allow the address and event witin this space using euclid
+coordinates. Within the model two independant coordinates are used,
+the spital coordinates $<x^{1},x^{2},x^{3}>$and the time $t$. 
+
+\noindent %
+\begin{table*}[t]
+\begin{sideways}
+\begin{tabular}{|>{\raggedright}p{0.07\paperwidth}|>{\raggedright}p{0.5\paperwidth}|>{\raggedright}p{0.4\paperwidth}|}
+\hline 
+Concept & General Relativistic & Classical Physics\tabularnewline
+\hline
+\hline 
+Space/Particles & Space is understood as a Rieman Manifold; which means there is a unique
+mapping $\varphi$ between events and the $R^{4}$. But there is no
+simple way of comparing two point's $P$ and $Q$.
+
+Time is eperienced by a moving observer based on the change of paramters
+along its trajectory, which means 
+
+\[
+\frac{d}{d\lambda}(f\circ c)(\lambda)=\frac{\partial f}{\partial x^{\alpha}}\mid_{c(\lambda)}\frac{dc^{\alpha}}{d\lambda}\Rightarrow\triangle f=\frac{\partial f}{\partial x^{\alpha}}\triangle s\]
+
+
+
+
+The curveture of the space is determined by
+
+\[
+R_{\mu\nu}(x)=k\left(T-\frac{1}{2}(Tg)\right)_{\mu\nu}(x)\]
+
+
+The Rieman curvature tensor is related to the Cirstophel Symbols which
+are determined from the metric. & The space where every thing happens in is an euclidian space but the
+properties of space in terms of geometry are not changing. All points
+can be transformed into each other by a simple translation and rotation.
+
+Two independant coordinates called time $t$ and location$<x^{1},x^{2},x^{3}>$are
+used to denote a certain particle. \tabularnewline
+\hline 
+Trajectories & $x(\lambda)=<x^{0}(\lambda),x^{1}(\lambda),x^{2}(\lambda),x^{3}(\lambda)>$.
+The parameter $\lambda$is choosen in such a way that the comoving
+obeserver is able to determine time. & The parameter $t$ is called time and is used to parameterise the
+trajectories $x(t)=<x^{1}(\lambda),x^{2}(\lambda),x^{3}(\lambda)>$
+
+All clocks can be synchronized in such a way that the following transformation
+rule holds $t'=at+b$\tabularnewline
+\hline 
+Motion  & The motion of particles is determined by the geodesic equation. 
+
+\[
+\frac{d^{2}c^{\alpha}}{d\lambda^{2}}=\Gamma_{\beta\gamma}^{\alpha}\frac{dc^{\beta}}{d\lambda}\frac{dc^{\gamma}}{d\lambda}\]
+
+
+The Christoffel Symbols are encapsulating the geometry of the space
+where a test particle is moving in
+
+\[
+\Gamma_{\alpha\beta\gamma}=\frac{1}{2}\left(\frac{\partial g_{\beta\gamma}}{\partial x^{\alpha}}-\frac{\partial g_{\alpha\beta}}{\partial x^{\gamma}}+\frac{\partial g_{\alpha\gamma}}{\partial x^{\beta}}\right)\]
+
+
+\[
+\Gamma_{\beta\gamma}^{\alpha}=g^{\delta\alpha}\Gamma_{\beta\delta\gamma}\]
+ & The motion of particles is only changed by imposed forces. If no force
+is imposed the particle continues moving.
+
+\raggedright{}\[
+k^{i}\mid_{c(\lambda)}=m\frac{d^{2}c^{i}}{dt^{2}}\]
+\tabularnewline
+\hline 
+Transformation &  & \tabularnewline
+\end{tabular}
+\end{sideways}
+
+\caption{Classical\label{eq:}tion vs. GR notion}
+
+\end{table*}
+
+
+
+\section{Newton in the notion of GR}
+
+Lets assume a curve $c(\lambda)=<t(\lambda),c^{i}(\lambda)$> with
+$i\in1..3$. Newtons key statements are formulated in terms of $t$
+and $c^{i}$ which should be understood as completly independant variable
+which expressed by using different indicies for the spital coordinates
+$i=1..3$ and by denoting time explicitly by $t$.
+
+\begin{equation}
+k^{i}\mid_{c(\lambda)}=m\frac{d^{2}c^{i}}{dt^{2}}\label{eq:sctio}\end{equation}
+
+
+The equation \ref{eq:sctio} simply states the change of movement
+of a mass $m$ requires a force $k$ to be imposed on the mass. This
+basic statement is assumed to be valid for all inertial systems with
+respect to space. With respect to time the assumption is that all
+clocks in all reference system can by synchronized by the simple formuar
+$t'=\alpha t+b$ . In the terms of SR, this transformatiion behaviour
+is specific for low speed intertial systems.
+
+Lets assume a curve $c(\lambda)=<t(\lambda),c^{i}\circ t(\lambda)$>
+with $i\in1..3$. In this formualtion for every cooridnate system,
+experienced time in any reference frame can be determined by the simple
+formular $t_{2}=at_{1}+b$
+
+\begin{equation}
+\frac{d^{2}c}{d\lambda^{2}}=<\frac{d^{2}c^{0}}{d\lambda^{2}},\frac{d^{2}c^{i}}{d\lambda^{2}}>=<0,\frac{d^{2}c^{i}}{d\lambda^{2}}>\end{equation}
+
+
+\begin{equation}
+\frac{d^{2}}{d\lambda^{2}}(c^{i}\circ t)(\lambda)=\frac{d^{2}c^{i}}{dt^{2}}\left(\frac{dt}{d\lambda}\right)^{2}\Rightarrow\frac{d^{2}c^{i}}{d\lambda^{2}}+\frac{1}{m}k^{i}\mid_{c(\lambda)}\left(\frac{dt}{d\lambda}\right)^{2}=0\label{eq:newton}\end{equation}
+
+
+Comparing equation \ref{eq:newton} with the geodesic equation \ref{eq:geo}
+yields Christophel symbols $\Gamma_{\beta\gamma\delta}^{\alpha}$
+which vanishes for most of the components.
+
+\begin{equation}
+\frac{d^{2}c^{\alpha}}{d\lambda^{2}}=\Gamma_{\beta\gamma}^{\alpha}\frac{dc^{\beta}}{d\lambda}\frac{dc^{\gamma}}{d\lambda}\label{eq:geo}\end{equation}
+
+
+\begin{equation}
+\Gamma_{00}^{i}=\begin{cases}
+\frac{1}{m}k^{i}\mid_{c(\lambda)} & i=1,2,3\\
+0 & else\end{cases}\end{equation}
+
+
+Using the the equation for the Christophel Symbols, yields under the
+assumption of a symetric metric $g_{\alpha\beta}=g_{\beta\alpha}$the
+following result
+
+\begin{equation}
+\Gamma_{00}^{i}=g^{\alpha i}\Gamma_{0\alpha0}=g^{\alpha i}\frac{\partial g_{00}}{\partial x^{\alpha}}=\frac{1}{m}k^{i}\end{equation}
+
+
+which can be interpreted as if an force changes the geometry of space.
+
+
+\subsection{Newton law of gravity}
+
+\begin{equation}
+\frac{d^{2}c^{i}}{dt^{2}}+\frac{\partial^{2}\phi}{\partial x^{i,2}}\mid_{c(t)}=0\end{equation}
+
+
+
+\subsection{Non Interacting Particles}
+
+\begin{equation}
+T=diag(\rho c^{2},0,0,0)\end{equation}
+
+
+\begin{equation}
+R_{\mu\upsilon}(x)=k\left\{ T_{\mu\nu}(x)-\frac{1}{2}(Tg)_{\mu\nu}(x)\right\} \end{equation}
+
+
+\begin{equation}
+R_{00}=\rho c^{2}k\left\{ 1-\frac{g_{00}}{2}\right\} \end{equation}
+
+\begin{thebibliography}{4}
+\bibitem{1}As an example; Reiner Oloff, Geometrie der Raumzeit, Vieweg,
+ISBN 3-528-26917-0
+
+\bibitem{2}\emph{Ta-Pei Chend, Relativity, Gravitation and Cosmology;
+Oxford Master Series, ISBN 0-19-852957-0}.
+
+\bibitem{3-2}American Mathematical Society, 
+
+\bibitem{3}American Mathematical Society, 
+\end{thebibliography}
+
+\end{document}

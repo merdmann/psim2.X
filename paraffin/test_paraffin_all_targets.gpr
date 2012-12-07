@@ -1,0 +1,26 @@
+project Test_Paraffin_All_Targets is
+
+   for Main use ("test_paraffin.adb");
+   for Source_Dirs use ("parallel/config/all_targets", "parallel/internal", "parallel/iteration/**", "parallel/recursion", "test/**", "parallel", "util/containers");
+   for Object_Dir use "bin/obj";
+   for Exec_Dir use "bin";
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnaty3abcefhiklmnprtISuxAoOL9", "-gnatw.eHLD", "-g", "-gnatf", "-gnatVn", "-fstack-check", "-gnat05", "-gnata");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-g", "-s", "-j2");
+      for Global_Configuration_Pragmas use "global_pragmas";
+   end Builder;
+
+   package Binder is
+      for Default_Switches ("ada") use ("-r", "-E");
+   end Binder;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-Wl,--gc-sections");
+   end Linker;
+
+end Test_Paraffin_All_Targets;
+
