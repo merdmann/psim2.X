@@ -34,7 +34,7 @@ result=$(tmp).result
 trajectory=$(tmp).trj
 objdir=./obj-$(arch)
 state=state
-schduling=SCHED_FIFO
+scheduling=SCHED_BATCH
 
 DEFS=-XBINDIR=$(bindir) \
 	-XARCH=$(arch) \
@@ -73,7 +73,7 @@ $(objdir):
 ## run a test with a given configuration and collect all relevant configuration data
 test ::  $(resultdir)
 	@echo "Build Options: $(DEFS)" > $(build)
-	$(MAKE) BUILD=$(buildtype)  all >> $(build)
+	$(MAKE) BUILD=$(buildtype) scheduling=$(scheduling)  all >> $(build)
 	rm -rf $(ROOT)/$(state).init
 	schedtool -F -p 20 -a $(CPU) -e /usr/bin/time -p -o $(timeinfo) $(bindir)/$(exec) $(ROOT)/$(CFG) $(loginfo) $(ROOT)/$(state) | tee $(stdout)
 	egrep ^P $(stdout) > $(trajectory)

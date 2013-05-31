@@ -137,7 +137,10 @@ package body My_Vector is
       Start_Lap(T_Iteration);
       for i in 1..Times loop
          Iteration_Count := Iteration_Count +1;
+
+         Start_Lap(T_Integration);
          Iterate( This );
+         Stop_Lap(T_Integration);
       end loop;
       Stop_Lap(T_Iteration);
 

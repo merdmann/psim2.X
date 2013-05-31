@@ -71,8 +71,9 @@ echo "Reorganizing files"
 p=1
 while [ $p -le $N ]; do
    f=${target}.$p.data
-   echo "Particle $p ... $f"
-   fgrep "P $p;" ${source} > $f
+   echo "Particle $p ... $f" 
+   echo "P,T,M,X,Y,Z,VX,VY,VZ,RR,V,E" > $f
+   fgrep "P $p;" ${source} | tr ';' ',' >> $f
       
    p=`expr $p + 1` 
 done 
