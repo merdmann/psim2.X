@@ -70,7 +70,7 @@ echo "${source} $N"
 echo "Reorganizing files"
 p=1
 while [ $p -le $N ]; do
-   f=${target}.$p.data
+   f=${target}.$p.txt
    echo "Particle $p ... $f" 
    echo "P,T,M,X,Y,Z,VX,VY,VZ,RR,V,E" > $f
    fgrep "P $p;" ${source} | tr ';' ',' >> $f
