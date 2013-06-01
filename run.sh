@@ -7,8 +7,8 @@
 #
 # This file is part of PSim. It is used to execute the particle simulator
 # in the correct environment.
-#                                                                         
-# Copyright (C) 2010 Michael Erdmann                                      
+#
+# Copyright (C) 2010 Michael Erdmann
 #
 # PSim is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,42 +28,42 @@
 
 . ./libexec/msg.sh
 . ./libexec/preamble.sh
-. ./libexec/jobs.sh 
+. ./libexec/jobs.sh
 
 ## provide help information
 function help {
 cat <<EOF
 
 usage:
-   ./run.sh option(s)	
+   ./run.sh option(s)
 
 description:
    Executes the simulator from the command line.
-   
-   The simulator is executed within a so called workspace which contains the 
-   executables, the configuration files which controls the execution and the 
-   results. 
-   
+
+   The simulator is executed within a so called workspace which contains the
+   executables, the configuration files which controls the execution and the
+   results.
+
    If the config file <config>.cfg is not already existing in the workspace
    it will be copied from the $home/configs directory.
-   
+
    The binaries are expected to be found under $home/<arch>-bin.
-    
+
    If not otherwise specfied the followig defaults will be used:
-   
+
    workspace = \$home/jobs/\$config-\$version
    logdir=\$workspace
    resultdir=\$workspace
-   
+
 option(s):
    --home=<dir>      The distribution directory
    --workdir=<dir>   Specifies the place where the program is executed.
-   --resultdir=<dir> The place where the results are stored after 
+   --resultdir=<dir> The place where the results are stored after
                      completion.
    --logdir=<dir>    Location where the log files are stored.
-   --config=<config> Specifies the configuration to be used. 
+   --config=<config> Specifies the configuration to be used.
    --version=<vers>  Specifies the version of a configuration
-                        
+
 EOF
 }
 
@@ -71,7 +71,7 @@ EOF
 ## BEGIN ##
 ###########
 
-preamble `basename $0` 
+preamble `basename $0`
 
 state=""
 workspace=""
@@ -79,8 +79,9 @@ workdir=""
 version=""
 config=""
 state=""
-home=`pwd` 
+home=`pwd`
 opt_nosort=""
+opt_halt=""
 
 for i in $* ; do
    case "$1" in
@@ -88,48 +89,52 @@ for i in $* ; do
        *) optarg= ;;
    esac
 
-   case $1 in   	
+   case $1 in
        --config=*)
            config=$optarg
            ;;
-           
+
        --version=*)
        	   version=$optarg
        	   ;;
-           
+
        --state=*)
            state=$optarg
            ;;
-           
+
        --home=*)
        	   home=$optarg
        	   ;;
-       	   
+
        --jobname=*)
            jobname=$optarg
            ;;
-           
+
        --resultdir=*)
        	   resultdir=$optarg
        	   ;;
-       	   
+
        --workdir=*)
            workdir=$optarg
            ;;
-           
+
        --logdir=*)
        	   logdir=$optarg
        	   ;;
-           
+
        --nosort)
            opt_nosort="y"
            ;;
-           
+
+       --halt)
+       	   opt_halt="y"
+           ;;
+
        --h|--help)
            help
            exit 1
-           ;;	   
-        *) 
+           ;;
+        *)
            additional="${additional} $1"
            ;;
    esac
@@ -161,15 +166,15 @@ fi
 if [ -z "${logdir}" ] ; then
    logdir=${workspace}
 fi
-   
+
 ## set the tool pathes
 logfile=${logdir}/${jobname}-sim.log
 resultfile=${resultdir}/${jobname}.data
-execdir=`${home}/tools/execute.sh --path --root=${home}` 
+execdir=`${home}/tools/execute.sh --path --root=${home}`
 sort=${home}/tools/sort.sh
 
 if [ -z "${state}"] ; then
-   state=${config}   
+   state=${config}
 fi
 
 # create the workspace contents
@@ -186,15 +191,15 @@ fi
 if [ -z "${logdir}" ] ; then
    logdir=${workspace}
 fi
-   
+
 ## set the tool pathes
 logfile=${logdir}/${jobname}-sim.log
 resultfile=${resultdir}/${jobname}.data
-execdir=`${home}/tools/execute.sh --path --root=${home}` 
+execdir=`${home}/tools/execute.sh --path --root=${home}`
 sort=${home}/tools/sort.sh
 
 if [ -z "${state}" ] ; then
-   state=${config}   
+   state=${config}
 fi
 
 if [ ! -d ${resultdir} ] ; then
@@ -204,9 +209,9 @@ else
 fi
 
 cd ${workspace}
-if [ -e ${execdir}/particle ] ; then 
-   cp ${execdir}/particle ${workspace}	
-else 
+if [ -e ${execdir}/particle ] ; then
+   cp ${execdir}/particle ${workspace}
+else
    Error "simulator has not been build!"
    exit 1
 fi
@@ -215,7 +220,7 @@ if [ ! -e ${workspace}/particle ] ; then
 	exit 1;
 fi
 
-## run 
+## run
 time -p ${workspace}/particle ${config} ${logfile} ${state} > ${resultfile}
 
 if [ -z "${opt_nosort}" ] ; then
@@ -230,4 +235,10 @@ if [ "${workspace}"  !=  "${resultdir}" ] ; then
 fi
 
 postamble
+
+## used on google compting engine
+if [ "x${opt_halt}" != "x" ] ; then
+   sync
+   sudo shutdown -h now
+fi
 exit 0
