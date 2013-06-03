@@ -73,7 +73,7 @@ while [ $p -le $N ]; do
    f=${target}.$p.txt
    echo "Particle $p ... $f" 
    echo "P,T,M,X,Y,Z,VX,VY,VZ,RR,V,E" > $f
-   fgrep "P $p;" ${source} | tr ';' ',' >> $f
+   fgrep "P $p;" ${source} | tr ';' ',' | tr 'P' ' ' >> $f
       
    p=`expr $p + 1` 
 done 
