@@ -1,0 +1,78 @@
+he paper looks interesting, but contains a lot of mistakes in grammar and presentation:
+for the understanding, do you talk about one dimensional particel interaction?
+how is the time step synchronization done, when a particel is forced by two others?
+how is the time step adopted, via standard Runge Kutta?
+different blanks are missing in the text
+Fig. 3; the relation for log (N=10) is 2.5 for sequential/parallel) with 7 cores, why? Is the communication overhead so much? Should be explained.
+Fig. 5: T (Semaphores) is missing. barreier is wrong written.
+
+The paper is still interesting, but has to be reworked significantly.
+
+This paper presents a vector computing abstraction to easily use parallellism
+for simulation applications.
+
+The topic is appropriate for an Ada-Europe conference. The authors refer to
+Ada 95: it would be good if they could also reflect on the possible impact of
+Ada 2012 on their work. 
+
+The paper is reasonably well written and structured, though the language
+should be improved somewhat. The required elements for a scientific paper
+are present (including case study and detailed measurements), but the
+relation with other work, future work, and references should be expanded.
+
+Check the paper for typos and English language errors. Preferably have it
+reviewed by a native English speaker. The positioning of figures 3 to 5 is
+unfortunate: try to move them closer to the corresponding text (for example
+by splitting figure 3 in two figures).
+
+his paper describes a framework for vectorized concurrent computing for a simulation of simple multiple particle system. The paper concludes with lessons learned from the project.
+
+General Remarks: Language needs improvement, contact a native speaker!
+
+Ada 2012 LRM D.10.1 "Synchronous Barriers" describes new language features which will be helpful.
+
+Implementing concurrent programs for multi-core CPUs certainly is a challenge. Synchronization has to be kept to a minimum in order to achieve good performance results. This includes synchronization done implicitly if memory is allocated from the heap. Some programmers do not know that the Ada runtime sometimes allocates data on the heap, although the "new" operator is not used (unconstrained objects).
+
+There are tools that can be used to spot parts of the concurrent program where performance can be improved, e.g. GNU gprof.
+
+Since none of the above is mentioned in the paper, I think that the paper needs in improvement.
+
+Paper summary
+
+The paper proposes a software framework for particle simulation on shared-memory multicore CPUs. The high-level specification of the framework is stated as a UML structure diagram and a sequence diagram. Framework users are expected to implement the actual interaction between two particles in the simulation, plus a synchronization object that encapsulates platform-specific synchronization primitives for the coordination of framework clients and workers. The paper makes several design choices, which are motivated by experimental evaluation of different design alternatives on a Linux system. Ada is the implementation language of the framework.
+
+Major comments
+
+(1) Novelty and contribution of the paper are limited. Particle simulation is an instance of the Nbody simulation problem, which is so common that it has already been expressed as a Parallel Programming Design Pattern, e.g., http://parlab.eecs.berkeley.edu/wiki/patterns/n-body_methods
+The paper does not set aside itself from the large amount of related work already available. The framework design and its Ada implementation seem the main contributions. However, for the framework design, there are several issues stated below; The paper does not provide much discussion of the implementation aspects specific to Ada. 
+
+(2) The proposed geometric decomposition of work to exploit task-parallelism is straight-forward. The paper misses out on further opportunities such as data-parallelism (e.g., using SIMD units) and pipeline parallelism. For the chosen static work decomposition, it is surprising that static allocation is slower than dynamic allocation. With dynamic allocation ('scattered' in the paper's notation), how is the race-condition with the counter variable solved? I would expect the shared counter to become a highly-contended serialization-point.
+
+(3) Technical strength needs to be improved. The design of the framework to some degree contradicts its implementation language. Ada provides synchronization primitives on language level, to abstract away from OS and HW. However, the proposed framework requires the user to 'manually' implement synchronization. Experimental evaluation is preliminary; in particular, the performance of the framework is compared to the author's own sequential implementation instead of the related work; more with 'Minor comments'.
+
+(4) The language and presentation of the paper need to be improved. Some notations used with figures don't match the text.
+
+Minor comments:
+
+Eq. 6: your 'parallelism efficiency' is called 'speedup' in the literature, see, e.g., 
+
+@book{Hennessy:2006:CAF:1200662,
+author = {Hennessy, John L. and Patterson, David A.},
+title = {Computer Architecture, Fourth Edition: A Quantitative Approach},
+year = {2006},
+isbn = {0123704901},
+publisher = {Morgan Kaufmann Publishers Inc.},
+address = {San Francisco, CA, USA},
+} 
+
+
+Section 2.2, Measurements.
+
+What measurement methodology was used? k-best, median, ...? How were execution times measured? Using gettimeofday, hw performance counters? The way the data is currently presented, it is not possible to draw conclusions. Wrt. synchronization mechanisms, it's necessary to find out how each of them is implemented; this would help to explain why they show the same performance.
+
+Fig 3a: the legend is not explained; e.g, 'partitioned (BATCH)'. Showing the scalability wrt. your sequential version is ok, but to judge the overall efficiency, it is necessary to compare the proposed method to the related work.
+
+Xenon -> Xeon
+
+'Outlook': which kernel parameters are expected to be tuned?
+

@@ -75,7 +75,7 @@ test ::  $(resultdir)
 	@echo "Build Options: $(DEFS)" > $(build)
 	$(MAKE) BUILD=$(buildtype) scheduling=$(scheduling)  all >> $(build)
 	rm -rf $(ROOT)/$(state).init
-	schedtool -F -p 20 -a $(CPU) -e /usr/bin/time -p -o $(timeinfo) $(bindir)/$(exec) $(ROOT)/$(CFG) $(loginfo) $(ROOT)/$(state) | tee $(stdout)
+	/usr/bin/time -p -o $(timeinfo) $(bindir)/$(exec) $(ROOT)/$(CFG) $(loginfo) $(ROOT)/$(state) | tee $(stdout)
 	egrep ^P $(stdout) > $(trajectory)
 	cat /proc/cpuinfo | grep "model name" > $(cpuinfo)
 	cat /proc/cpuinfo | grep  MHz >> $(cpuinfo)
@@ -95,6 +95,9 @@ test ::  $(resultdir)
 
 nbody :: $(resultdir)
 	$(MAKE) buildtype=production opt=$(opt) CFG=nbody test
+
+central :: $(resultdir)
+	/usr/bin/time -p -o $(timeinfo) $(bindir)/$(exec) $(ROOT)/central $(loginfo) $(ROOT)/$(state) | tee $(stdout)|grep "P "
 
 $(resultdir):
 	mkdir -p $(resultdir)

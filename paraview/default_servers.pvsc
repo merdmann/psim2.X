@@ -1,0 +1,77 @@
+<Servers>
+  <!-- local servers -->
+  <Server name="Home" resource="csrc://localhost">
+    <CommandStartup>
+      <Options>
+        <Option name="SERVER" label="Server">
+          <Enumeration default="hal">
+            <Entry value="hal" label="8 Cores (hal)" />
+            <Entry value="cyclope" label="4 Cores (cyclop)" />
+            <Entry value="thunder" label="2 cores (thunder)" />
+          </Enumeration>
+        </Option>
+
+       <Switch name="SERVER">
+          <Case value="hal">
+            <Set name="NUMPROC" value="8" />
+          </Case>
+          <Case value="cyclope">
+            <Set name="NUMPROC" value="4" />
+          </Case>
+          <Case value="thunder">
+            <Set name="NUMPROC" value="2" />
+          </Case>
+        </Switch>
+
+        <Option name="SSH_USER" label="SSH Username" save="true">
+          <String default="merdmann" />
+        </Option>
+      </Options>
+
+      <Command exec="/usr/bin/ssh" delay="5">
+        <Arguments>
+          <Argument value="$SERVER$" />
+          <Argument value="-l" />
+          <Argument value="$SSH_USER$" />
+          <Argument value="./pvserver_parallel.sh $NUMPROC$ " /> 
+        </Arguments>
+      </Command>
+
+    </CommandStartup>
+  </Server>
+
+  <!-- Sever in Google Cloud -->
+  <Server name="myspace" resource="csrc://localhost:11111">
+    <CommandStartup>
+      <Options>
+        <Option name="NUMPROC" label="Processes" save="true">
+          <String default="8" />
+        </Option>
+      </Options>
+
+      <Command exec="ssh" timeout="0" delay="5">
+        <Arguments>
+          <Argument value="-c"/>
+          <Argument value="arcfour,blowfish-cbc"/>
+          <Argument value="-XC"/>
+          <Argument value="-o"/>
+          <Argument value="UserKnownHostsFile=/dev/null"/>
+          <Argument value="-o"/>
+          <Argument value="CheckHostIP=no"/>
+          <Argument value="-o"/>
+          <Argument value="StrictHostKeyChecking=no"/>
+          <Argument value="-i"/>
+          <Argument value="/home/merdmann/.ssh/google_compute_engine"/>
+          <Argument value="-A"/>
+          <Argument value="-p"/>
+          <Argument value="22"/>
+          <Argument value="-R22222:localhost:11111"/>
+          <Argument value="merdmann@192.158.30.56"/>
+          <Argument value="-4"/>
+       	  <Argument value="./pvserver_parallel.sh $NUMPROC$ " /> 
+        </Arguments>
+      </Command>
+    </CommandStartup>
+  </Server>
+
+</Servers>

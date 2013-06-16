@@ -1,0 +1,26 @@
+This directory contains the PSim framework toegether with tools which have 
+benn used to benchmrk the framework.
+
+Jobs Configuration
+configs   - common configration files
+
+Different implementations of the newton equation
+single    - non paralle elaboration 
+newton	  - using parafine framework
+psim	  - using psim
+
+
+Visualization Code
+dx	  - OpenDX 
+paraview  - Paraview
+
+Others
+doc	  - documentation 
+tools	  - scripts commonly used here
+google	  - Code for using PSim with google computing enngine 
+common	  - common code, e.g. to read config files
+paraffin  - A copy of the paraffin framework
+benchmark - Benchmarking script
+
+run.sh
+

@@ -1,4 +1,6 @@
 with Ada.Exceptions;                   use Ada.Exceptions;
+with Ada.Numerics.Generic_Elementary_Functions;
+
 with Log;
 with Config;                           use Config;
 with Vector_Space;                     use Vector_Space;
@@ -9,6 +11,10 @@ with Time_Measurement;                 use Time_Measurement;
 with Timers;                           use Timers;
 
 package body My_Vector is
+
+   package Value_Functions is new Ada.Numerics.Generic_Elementary_Functions (
+     Value_Type);
+   use Value_Functions;
 
    ----------------------
    -- Object_Data_Type --
@@ -68,9 +74,13 @@ package body My_Vector is
             DX : constant Vector_Type := X1(J).X - X1(I).X;
             R  : constant Value_Type := Norm(DX);
             G0 : constant Value_Type := 6.67428E-11;
-            F  : constant Value_Type := G0 * X1(I).Mass * X1(J).Mass/(R+RS)**2;
+            F  : constant Value_Type := G0 * X1(I).Mass * X1(J).Mass/R**2;
          begin
-            return F * DX;
+            if R < RS then
+               return Value_Type(-1.0)* Exp( 1.0 / R ) * DX;
+            else
+               return F * DX;
+	    end if;
          exception
             when E : others =>
                Log.Error("Exception while calculating force *** " & Exception_Name( E ) & " " &
@@ -105,7 +115,7 @@ package body My_Vector is
          X2(I).X := X1(I).X + DX;
          X2(I).Mass := X1(I).Mass;
 
-         --X2(i).Error := Scalar_Product( X1(I).Mass * DV + K ,X1(I).V);
+         X2(i).Error := Scalar_Product( X1(I).Mass * DV + K ,X1(I).V);
          Stop_Lap( T_Vector );
 
       exception
